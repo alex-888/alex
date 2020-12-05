@@ -2,6 +2,7 @@ package alex.lib;
 
 import alex.Application;
 import alex.authentication.UserToken;
+import alex.cache.ExpressCache;
 import alex.cache.GoodsCache;
 import alex.cache.GoodsSpecCache;
 import alex.entity.GoodsSpecEntity;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +74,16 @@ public class Cart {
 
         items.removeIf(item -> {
             var goodsEntity = GoodsCache.getGoodsEntity(item.getGoodsId());
-            if (goodsEntity == null) {
+            if (goodsEntity == null
+                    //商品回收站
+                    || (goodsEntity.getStatus() & GoodsStatus.RECYCLE_BIN) > 0
+                    //已下架商品
+                    || (goodsEntity.getStatus() & GoodsStatus.ON_SELL) == 0) {
                 return true;
             }
             item.setGoodsImg(goodsEntity.getImgs().split(",")[0]);
             item.setGoodsName(goodsEntity.getName());
+            item.setGoodsStatus(goodsEntity.getStatus());
             item.setGoodsWeight(goodsEntity.getWeight());
             item.setGoodsPrice(goodsEntity.getPrice());
             if (item.specId == 0) {
@@ -106,11 +113,20 @@ public class Cart {
         return size == items.size();
     }
 
+    /**
+     * 清空购物车
+     */
     public void clear() {
         items.clear();
         save();
     }
 
+    /**
+     * 删除商品
+     *
+     * @param goodsId 商品ID
+     * @param specId  商品规格
+     */
     public void del(long goodsId, long specId) {
         if (goodsId <= 0 || specId < 0) {
             return;
@@ -124,12 +140,27 @@ public class Cart {
         }
         save();
     }
+    /**
+     * 批量删除商品
+     *
+     * @param items 商品
+     */
+    public void del(Collection<Item> items) {
+        items.forEach(item -> this.items.remove(item));
+        save();
+    }
 
     public List<Item> getItems() {
         return items;
     }
 
+    public UserToken getUserToken() {
+        return userToken;
+    }
 
+    /**
+     * 保存购物车数据
+     */
     void save() {
         check();
         String json;
@@ -156,6 +187,13 @@ public class Cart {
         }
     }
 
+    /**
+     * 设置指定商品选中状态
+     *
+     * @param goodsId  商品ID
+     * @param specId   商品规格
+     * @param selected 选中状态
+     */
     public void setSelected(long goodsId, long specId, boolean selected) {
         if (goodsId <= 0 || specId < 0) {
             return;
@@ -171,11 +209,52 @@ public class Cart {
         }
     }
 
+    /**
+     * 设置所有商品选中状态
+     *
+     * @param selected 选中状态
+     */
     public void setSelectedAll(boolean selected) {
         items.forEach(item -> item.setSelected(selected));
         save();
     }
 
+    /**
+     * 计算物流费用
+     *
+     * @param code 收货地址
+     * @return 物流费用, 负数不支持该地区派送
+     */
+    public long shippingFee(long code) {
+        // 是否符合免邮费规则
+        var freeRule = ExpressCache.getFreeRule();
+        if (freeRule.isEnable() && freeRule.getExclude().contains(code) && sumPrice() >= freeRule.getPrice()) {
+            return 0;
+        }
+        var priceRule = ExpressCache.getPriceRule();
+        // 包邮商品产生的物流费用
+        long price1 = 0;
+        price1 = priceRule.getShippingFee(code, sumWeightShippingFree());
+
+        // 全部商品产生的快递非哟
+        long price2 = priceRule.getShippingFee(code, sumWeight());
+
+        if (price1 < 0 || price2 <= 0) {
+            return -1;
+        }
+        if (price1 >= price2) {
+            return 0;
+        }
+        return price2 - price1;
+    }
+
+    /**
+     * 添加商品
+     *
+     * @param goodsId 商品ID
+     * @param specId  商品规格
+     * @param num     商品数量
+     */
     public void sub(long goodsId, long specId, long num) {
         if (goodsId <= 0 || specId < 0 || num <= 0) {
             return;
@@ -235,7 +314,21 @@ public class Cart {
             if (item.isSelected()) {
                 l += item.goodsWeight * item.num;
             }
+        }
+        return l;
+    }
 
+    /**
+     * 选中商品内包邮商品重量合计
+     *
+     * @return 选中商品内包邮商品重量合计
+     */
+    public long sumWeightShippingFree() {
+        long l = 0;
+        for (var item : items) {
+            if (item.isSelected() && (item.getGoodsStatus() & GoodsStatus.SHIPPING_FEE) == 0) {
+                l += item.goodsWeight * item.num;
+            }
         }
         return l;
     }
@@ -248,6 +341,8 @@ public class Cart {
         private String goodsName;
 
         private long goodsPrice;
+
+        private long goodsStatus;
 
         private long goodsWeight;
 
@@ -292,6 +387,14 @@ public class Cart {
 
         public void setGoodsPrice(long goodsPrice) {
             this.goodsPrice = goodsPrice;
+        }
+
+        public long getGoodsStatus() {
+            return goodsStatus;
+        }
+
+        public void setGoodsStatus(long goodsStatus) {
+            this.goodsStatus = goodsStatus;
         }
 
         public long getGoodsWeight() {

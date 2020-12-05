@@ -40,16 +40,18 @@ public class JsonResult {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public JsonResult setMsg(String msg) {
         this.msg = msg;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public JsonResult setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     @Override

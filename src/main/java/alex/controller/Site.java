@@ -137,14 +137,12 @@ public class Site {
     }
 
     @RequestMapping(value = "test", method = RequestMethod.GET)
-    @ResponseBody
-    @Transactional
-    public String getTest(Model model, HttpServletRequest request) {
-
-        Application.JDBC_TEMPLATE.update("update abc set id = 1");
-        return "";
-
+    public ModelAndView getTest(Model model, HttpServletRequest request) {
+        return Helper.msgPage(request.getParameter("msg"),
+                request.getParameter("backUrl"),
+                request);
     }
+
     @RequestMapping(value = "test1", method = RequestMethod.GET)
     @ResponseBody
     public String getTest1(Model model, HttpServletRequest request) {
@@ -156,12 +154,23 @@ public class Site {
 
     }
 
-    @RequestMapping(value = "msg", method = RequestMethod.GET)
-    public ModelAndView getMsg(HttpServletRequest request, String title, String msg, String backUrl) {
+    @GetMapping(value = "msg")
+    public ModelAndView getMsg(HttpServletRequest request, HttpServletResponse response) {
+        var session = request.getSession();
         ModelAndView modelAndView = Helper.newModelAndView("msg", request);
-        modelAndView.addObject("title", title);
+        var msg = session.getAttribute("msg");
+        if (msg == null) {
+            try {
+                response.sendRedirect("/");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         modelAndView.addObject("msg", msg);
-        modelAndView.addObject("backUrl", backUrl);
+        modelAndView.addObject("backUrl", session.getAttribute("backUrl"));
+        session.removeAttribute("msg");
+        session.removeAttribute("backUrl");
+        modelAndView.addObject("title", msg);
         return modelAndView;
     }
 

@@ -1,8 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head th:replace="__${theme}__/components::head(~{::title},~{::link}, ~{})">
+<head th:replace="__${theme}__/components::head(~{::title},~{::style}, ~{})">
     <title th:text="'信息-' + ${siteName}"/>
-    <link rel="stylesheet" th:href="${#helpers.retouch('/theme/' + theme + '/cart.css')}">
+    <style>
+        .msg {
+            border: 1px solid #ddd;
+            display: block;
+            font-size: 1.2rem;
+            line-height: 2rem;
+            margin: 2% 0;
+            padding: 3rem 0;
+        }
+        .msg a {
+            color:#777;
+            font-size: 1.1rem;
+        }
+        .msg a:hover {
+            color:#C81623;
+        }
+    </style>
 </head>
 <body>
 <header th:replace="__${theme}__/components::header"/>
@@ -16,6 +32,10 @@
         </ol>
     </nav>
 
+    <div class="bg-light text-center msg">
+        <p class="text-success" th:text="${msg}"></p>
+        <a th:href="${backUrl}" th:if="${backUrl != null}">点击返回</a>
+    </div>
 
 
 </div>

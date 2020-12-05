@@ -1,5 +1,6 @@
 package alex;
 
+import alex.lib.Helper;
 import alex.lib.ScheduledTasks;
 import alex.lib.ShutdownThread;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +28,7 @@ public class Application {
     public static String APP_DIR;
     public static ConfigurableApplicationContext CONTEXT;
     public static JdbcTemplate JDBC_TEMPLATE;
+    public static AtomicLong ORDER_ID;
     public static StringRedisTemplate REDIS_TEMPLATE;
     public static String REDIS_SESSION_NAMESPACE;
 
@@ -84,6 +87,7 @@ public class Application {
     @Autowired
     private void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         JDBC_TEMPLATE = jdbcTemplate;
+        ORDER_ID = new AtomicLong(Helper.longValue(jdbcTemplate.queryForObject("SELECT MAX(id) FROM orders", Object.class)));
     }
 
     @Autowired

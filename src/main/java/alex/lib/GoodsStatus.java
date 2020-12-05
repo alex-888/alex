@@ -1,16 +1,16 @@
 package alex.lib;
 
 /**
- * goods status
+ * 商品状态
  */
 public class GoodsStatus {
-    /* recycle bin */
+    /* 回收站 */
    public static final long RECYCLE_BIN = 0B1;
 
-    /* on sell */
+    /* 在售 */
     public static final long ON_SELL = 0B10;
 
-    /* free shipping */
+    /* 免邮费 */
     public static final long SHIPPING_FEE = 0B100;
 
 }

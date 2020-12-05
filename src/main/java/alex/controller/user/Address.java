@@ -110,6 +110,10 @@ public class Address {
                 return jsonResult.toString();
             }
         }
+        // 对有addrId需求的请求回调时带上addrId
+        if (request.getParameter("addrId") != null) {
+            back += "?addrId=" + userAddressEntity.getId();
+        }
         jsonResult.setUrl(back);
         return jsonResult.toString();
     }

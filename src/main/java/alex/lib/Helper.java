@@ -183,6 +183,29 @@ public class Helper {
         return 0L;
     }
 
+    public static String msgPage(JsonResult jsonResult, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("msg", jsonResult.getMsg());
+        jsonResult.setMsg(null);
+        String url = jsonResult.getUrl();
+        if (url != null) {
+            if (!url.startsWith("/")) {
+                String uri = request.getRequestURI();
+                url = uri.substring(0, uri.lastIndexOf("/") + 1) + url;
+            }
+            session.setAttribute("backUrl", url);
+        }
+        jsonResult.setUrl("/msg");
+        return jsonResult.toString();
+    }
+
+    public static ModelAndView msgPage(String msg, String backUrl, HttpServletRequest request) {
+        ModelAndView modelAndView = Helper.newModelAndView("msg", request);
+        modelAndView.addObject("msg", msg);
+        modelAndView.addObject("backUrl", backUrl);
+        modelAndView.addObject("title", msg);
+        return modelAndView;
+    }
 
     /**
      * create new model and view

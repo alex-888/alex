@@ -13,7 +13,10 @@ import javax.transaction.Transactional;
 @Transactional
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    UserEntity findByName(String name);
+    @Query(value = "select * from users where id = ? for update", nativeQuery = true)
+    public UserEntity findByIdForUpdate(long id);
+
+    public UserEntity findByName(String name);
 
     @Modifying
     @Query(value = "update users set lastLoginIp = :lastLoginIp, lastLoginTime=now() where id = :id", nativeQuery = true)

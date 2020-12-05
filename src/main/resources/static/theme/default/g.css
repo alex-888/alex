@@ -15,6 +15,9 @@ a:hover, a.active {
 a:hover .red {
     color: #D02727;
 }
+.bg-light {
+    background-color: #f8f9fa!important;
+}
 
 .blue {
     color: blue;
@@ -697,16 +700,16 @@ th {
     text-align: left;
 }
 
+.text-center {
+    text-align: center;
+}
+
 .text-left {
     text-align: left;
 }
 
 .text-right {
     text-align: right;
-}
-
-.text-center {
-    text-align: center;
 }
 
 .text-justify {
@@ -735,6 +738,12 @@ th {
 
 .text-primary {
     color: #337ab7;
+}
+.text-secondary {
+    color: #6c757d!important;
+}
+.text-success {
+    color: #28a745!important;
 }
 
 
