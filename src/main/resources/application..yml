@@ -1,3 +1,6 @@
+application:
+  # 程序密钥
+  key: key
 logging:
   file:
     name: run.log

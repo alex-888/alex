@@ -1,6 +1,3 @@
-var $ = function (selectors) {
-    return document.querySelector(selectors);
-}
 // createElementFromHTML
 function ele(htmlString) {
     let html = new DOMParser().parseFromString(htmlString, 'text/html');

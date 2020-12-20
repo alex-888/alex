@@ -32,7 +32,6 @@ public class Application {
     public static StringRedisTemplate REDIS_TEMPLATE;
     public static String REDIS_SESSION_NAMESPACE;
 
-
     /**
      * get application dir
      *
@@ -87,7 +86,8 @@ public class Application {
     @Autowired
     private void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         JDBC_TEMPLATE = jdbcTemplate;
-        ORDER_ID = new AtomicLong(Helper.longValue(jdbcTemplate.queryForObject("SELECT MAX(id) FROM orders", Object.class)));
+        var id = jdbcTemplate.queryForList("SELECT MAX(id) as id FROM orders").get(0).get("id");
+        ORDER_ID = id == null ? new AtomicLong(0L) : new AtomicLong(Helper.longValue(id));
     }
 
     @Autowired

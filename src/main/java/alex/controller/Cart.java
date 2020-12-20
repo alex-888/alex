@@ -56,10 +56,7 @@ public class Cart {
         var goodsSpecEntities = GoodsSpecCache.getGoodsSpecEntities(goodsId);
         var cart = new alex.lib.Cart(request);
         cart.add(goodsId, specId, num);
-        //ModelAndView modelAndView = Helper.newModelAndView("cart/add", request);
-        //modelAndView.addObject("goodsEntity", goodsEntity);
-        //return modelAndView;
-        return Helper.msgPage("已加入购物车", "/goods/" + goodsEntity.getId() + ".html", request);
+        return Helper.msgPage("已加入购物车", "/cart", request);
     }
 
     @GetMapping(path = "buy")
@@ -118,12 +115,12 @@ public class Cart {
         long sumPrice = Helper.bigDecimalValue(request.getParameter("sumPrice")).multiply(new BigDecimal(100)).longValue();
         alex.lib.Cart cart = new alex.lib.Cart(request);
         var orderInfo = orderService.addOrder(
-                addrId,cart,sumPrice,shippingFee
+                addrId, cart, sumPrice, shippingFee
         );
         if (orderInfo.getErr() != null) {
             return jsonResult.setMsg(orderInfo.getErr()).toString();
         }
-        jsonResult.setMsg("已完成下单");
+        jsonResult.setMsg("已完成下单").setUrl("/");
         return Helper.msgPage(jsonResult, request);
     }
 

@@ -34,7 +34,7 @@
 
     <div class="bg-light text-center msg">
         <p class="text-success" th:text="${msg}"></p>
-        <a th:href="${backUrl}" th:if="${backUrl != null}">点击返回</a>
+        <a th:href="${backUrl}" th:if="${backUrl != null  && backUrl.length() > 0}">确定</a>
     </div>
 
 

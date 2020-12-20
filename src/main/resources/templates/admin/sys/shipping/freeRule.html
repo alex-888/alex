@@ -31,8 +31,8 @@
 <br>
 <div th:replace="admin/components::footer"/>
 <script>
-    var exclude = $("input[name=exclude]");
-    var textarea = $("textarea");
+    var exclude = document.querySelector("input[name=exclude]");
+    var textarea = document.querySelector("textarea");
     function render() {
         textarea.textContent = "";
         let arr = exclude.value.split(",");
@@ -44,11 +44,11 @@
             if (i > 0) {
                 textarea.append(",");
             }
-            textarea.append($("option[value='" + code + "']").innerText);
+            textarea.append(document.querySelector("option[value='" + code + "']").innerText);
         }
     }
     function addArea() {
-        let code = $("#province").value;
+        let code = document.querySelector("#province").value;
         let arr = exclude.value.split(",");
         for (let i = 0; i< arr.length; i++) {
             if (code === arr[i]) {
@@ -62,7 +62,7 @@
         render();
     }
     function delArea() {
-        let code = $("#province").value;
+        let code = document.querySelector("#province").value;
         let arr = exclude.value.split(",");
         exclude.value = "";
         for (let i = 0; i< arr.length; i++) {
@@ -77,8 +77,8 @@
         render();
     }
     var freeRule = [(${freeRule})];
-    $("input[name=enable]").checked = freeRule.enable;
-    $("input[name=price]").value = priceFormat(freeRule.price);
+    document.querySelector("input[name=enable]").checked = freeRule.enable;
+    document.querySelector("input[name=price]").value = priceFormat(freeRule.price);
     exclude.value = freeRule.exclude.join();
     render();
 </script>

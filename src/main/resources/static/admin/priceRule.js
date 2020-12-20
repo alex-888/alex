@@ -1,15 +1,15 @@
-var rules = $("#rules");
-$("input[name=firstWeight]").value = priceRule.firstWeight;
-$("input[name=firstPrice]").value = priceFormat(priceRule.firstPrice);
+var rules = document.querySelector("#rules");
+document.querySelector("input[name=firstWeight]").value = priceRule.firstWeight;
+document.querySelector("input[name=firstPrice]").value = priceFormat(priceRule.firstPrice);
 
-$("input[name=additionalWeight]").value = priceRule.additionalWeight;
-$("input[name=additionalPrice]").value = priceFormat(priceRule.additionalPrice);
+document.querySelector("input[name=additionalWeight]").value = priceRule.additionalWeight;
+document.querySelector("input[name=additionalPrice]").value = priceFormat(priceRule.additionalPrice);
 if (priceRule.otherDefault) {
-    $("input[name=otherDefault]").checked = true;
+    document.querySelector("input[name=otherDefault]").checked = true;
 }
 
 
-$("#addBtn").addEventListener("click", ev => {
+document.querySelector("#addBtn").addEventListener("click", ev => {
     rules.append(ele(ruleHtml));
 });
 

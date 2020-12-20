@@ -1,8 +1,10 @@
 package alex.cache;
 
+import alex.lib.Crypto;
 import alex.lib.Helper;
 import alex.repository.SystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@DependsOn("Crypto")
 public class SystemCache {
     //备案号
     private static String beian;
@@ -79,16 +82,16 @@ public class SystemCache {
                         storageType = entity.getValue();
                         break;
                     case "ossAk":
-                        ossAk = entity.getValue();
+                        ossAk = Crypto.decrypt(entity.getValue());
                         break;
                     case "ossAks":
-                        ossAks = entity.getValue();
+                        ossAks = Crypto.decrypt(entity.getValue());
                         break;
                     case "ossBucket":
                         ossBucket = entity.getValue();
                         break;
                     case "ossBucketUrl":
-                        ossBucketUrl= entity.getValue();
+                        ossBucketUrl = entity.getValue();
                         break;
                     case "ossEndpoint":
                         ossEndpoint = entity.getValue();
