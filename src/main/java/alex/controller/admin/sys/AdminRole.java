@@ -40,7 +40,7 @@ public class AdminRole {
         long id = Helper.longValue(request.getParameter("id"));
         AdminRoleEntity adminRoleEntity = adminRoleRepository.findById(id).orElse(null);
         if (adminRoleEntity != null) {
-            Long num = Application.JDBC_TEMPLATE.queryForObject("select count(*) from adminUsers where roleId=" + id, Long.class);
+            Long num = Application.getJdbcTemplate().queryForObject("select count(*) from adminUsers where roleId=" + id, Long.class);
             if (num != null && num > 0) {
                 jsonResult.setMsg("该角色正在被使用中,删除失败");
                 return jsonResult.toString();

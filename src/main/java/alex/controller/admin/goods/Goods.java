@@ -95,8 +95,8 @@ public class Goods {
             jsonResult.setMsg("商品不存在");
             return AdminHelper.msgPage(jsonResult, request);
         }
-        Application.JDBC_TEMPLATE.update("delete from goodsSpec where goodsId = ?", id);
-        goodsRepository.delete(goodsEntity);
+        Application.getJdbcTemplate().update("delete from goodsSpec where goodsId = ?", id);
+        GoodsCache.getRows().remove(id);
         jsonResult.setMsg("删除成功");
         return AdminHelper.msgPage(jsonResult, request);
     }
@@ -210,7 +210,7 @@ public class Goods {
         }
         goodsEntity.setUpdateAt(now);
         goodsEntity.setBrandId(Helper.longValue(request.getParameter("brandId")));
-        if (goodsEntity.getBrandId() > 0 && BrandCache.getEntityById(goodsEntity.getBrandId()) == null) {
+        if (goodsEntity.getBrandId() > 0 && BrandCache.getRows().get(goodsEntity.getBrandId()) == null) {
             jsonResult.setMsg("商品品牌不存在");
             return jsonResult.toString();
         }
@@ -382,7 +382,7 @@ public class Goods {
             }
             goodsSpecRepository.deleteByGoodsIdAndIdNotIn(id, deleteSpecIds);
         }
-        GoodsCache.updateGoods(goodsEntity.getId());
+        GoodsCache.getRows().put(goodsEntity.getId(), goodsEntity);
         GoodsSpecCache.updateByGoods(goodsEntity);
 
         if (id > 0) {

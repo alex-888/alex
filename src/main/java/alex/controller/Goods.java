@@ -23,7 +23,7 @@ public class Goods {
     public ModelAndView getIndex(
             @PathVariable long goodsId,
             HttpServletRequest request){
-        GoodsEntity goodsEntity = GoodsCache.getGoodsEntity(goodsId);
+        GoodsEntity goodsEntity = GoodsCache.getRows().get(goodsId);
         String[] goodsImgs = goodsEntity.getImgs().split(",");
         String specItems = null;
         ObjectMapper objectMapper = new ObjectMapper();

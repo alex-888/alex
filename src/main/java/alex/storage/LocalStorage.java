@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 public class LocalStorage implements Storage {
 
-    public final static String UPLOAD_DIR = Application.APP_DIR + "img" + File.separator;
+    public final static String UPLOAD_DIR = Application.getAppDir() + "img" + File.separator;
 
 
     @Override

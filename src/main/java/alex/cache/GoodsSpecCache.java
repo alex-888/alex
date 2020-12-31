@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@DependsOn("goodsCache")
+@DependsOn("GoodsCache")
 public class GoodsSpecCache {
     private final static Map<Long, List<GoodsSpecEntity>> rows = new ConcurrentHashMap<>();
     private static GoodsSpecRepository goodsSpecRepository;
@@ -26,10 +26,12 @@ public class GoodsSpecCache {
     @PostConstruct
     public static synchronized void init() {
         rows.clear();
-        var list = GoodsCache.getAllGoodsEntity();
-        list.forEach(GoodsSpecCache::updateByGoods);
+        GoodsCache.getRows().forEach((id, goodsEntity)->{
+            GoodsSpecCache.updateByGoods(goodsEntity);
+        });
 
     }
+
 
     public static List<GoodsSpecEntity> getGoodsSpecEntities(long goodsId) {
         return rows.get(goodsId);
@@ -52,7 +54,7 @@ public class GoodsSpecCache {
         if (goodsId <= 0 ) {
             return;
         }
-        GoodsEntity goodsEntity = GoodsCache.getGoodsEntity(goodsId);
+        GoodsEntity goodsEntity = GoodsCache.getRows().get(goodsId);
         if (goodsEntity == null || goodsEntity.getSpec().length() < 10) {
             rows.remove(goodsId);
             return;

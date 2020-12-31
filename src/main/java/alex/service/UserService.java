@@ -78,11 +78,11 @@ public class UserService {
 
     public String register(String name, String password, String registerIp) {
         String salt = Helper.randomString(4);
-        if (Application.JDBC_TEMPLATE.queryForObject("select count(*) from users where name=?", new String[]{name}, Integer.class) > 0) {
+        if (Application.getJdbcTemplate().queryForObject("select count(*) from users where name=?", Integer.class, name) > 0) {
             return "此用户已被注册";
         }
         try {
-            Application.JDBC_TEMPLATE.update("insert into users (name, password, salt, registerTime, registerIp) values (?,?,?,now(),?)",
+            Application.getJdbcTemplate().update("insert into users (name, password, salt, registerTime, registerIp) values (?,?,?,now(),?)",
                     name, Crypto.sha3_256(password + salt), salt, registerIp);
         } catch (DuplicateKeyException ex) {
             return "此用户已被注册";

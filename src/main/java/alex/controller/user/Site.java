@@ -159,7 +159,7 @@ public class Site {
             }
         }
         if (jsonResult.error.size() == 0) {
-            UserService userService = Application.CONTEXT.getBean(UserService.class);
+            UserService userService = Application.getContext().getBean(UserService.class);
             String salt = userService.editPassword(userToken.getId(), password, Helper.getClientIp(request));
             if (salt != null) {
                 jsonResult.setMsg("修改成功");

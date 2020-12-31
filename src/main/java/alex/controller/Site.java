@@ -146,7 +146,7 @@ public class Site {
     @RequestMapping(value = "test1", method = RequestMethod.GET)
     @ResponseBody
     public String getTest1(Model model, HttpServletRequest request) {
-        TemplateEngine templateEngine = Application.CONTEXT.getBean(TemplateEngine.class);
+        TemplateEngine templateEngine = Application.getContext().getBean(TemplateEngine.class);
         Context context = new Context();
         context.setVariable("error", "msg");
         String html = templateEngine.process("default/error", context);

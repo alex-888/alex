@@ -17,7 +17,7 @@ public class DatabaseTest {
     public void EntityTest() {
         long id = Database.insertUserLog(1, 1, "msg", "ip");
         Assertions.assertTrue(id > 0);
-        UserLogRepository userLogRepository = Application.CONTEXT.getBean(UserLogRepository.class);
+        UserLogRepository userLogRepository = Application.getContext().getBean(UserLogRepository.class);
         userLogRepository.deleteById(id);
 
     }

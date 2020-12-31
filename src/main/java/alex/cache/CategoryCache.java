@@ -1,6 +1,7 @@
 package alex.cache;
 
 import alex.entity.CategoryEntity;
+import alex.entity.GoodsEntity;
 import alex.service.CategoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Component
@@ -169,6 +171,8 @@ public class CategoryCache {
 
     public static class CategoryNode {
         private final List<CategoryNode> childNodes = new LinkedList<>();
+        // 当前分类下的推荐商品
+        private List<GoodsEntity> goods;
         private long id;
         private String name;
 

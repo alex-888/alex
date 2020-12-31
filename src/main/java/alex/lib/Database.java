@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 public class Database {
     public static long insertUserLog(long uid, int type, String msg, String ip) {
-        UserLogRepository userLogRepository = Application.CONTEXT.getBean(UserLogRepository.class);
+        UserLogRepository userLogRepository = Application.getContext().getBean(UserLogRepository.class);
         UserLogEntity userLogEntity = new UserLogEntity();
         userLogEntity.setUid(uid);
         userLogEntity.setType(type);

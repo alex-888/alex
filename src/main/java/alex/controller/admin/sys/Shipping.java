@@ -140,7 +140,7 @@ public class Shipping {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writeValueAsString(freeRule);
-            Application.JDBC_TEMPLATE.update("update system set value = ? where entity='shipping' and attribute = 'freeRule'",
+            Application.getJdbcTemplate().update("update system set value = ? where entity='shipping' and attribute = 'freeRule'",
                     json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -230,7 +230,7 @@ public class Shipping {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writeValueAsString(priceRule);
-            Application.JDBC_TEMPLATE.update("update system set value = ? where entity='shipping' and attribute = 'priceRule'",
+            Application.getJdbcTemplate().update("update system set value = ? where entity='shipping' and attribute = 'priceRule'",
                     json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

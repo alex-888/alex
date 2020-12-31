@@ -19,7 +19,7 @@ public class ScheduledTasks {
     @SuppressWarnings("all")
     public void cleanTemplateFiles() {
         long now = Calendar.getInstance().getTimeInMillis();
-        Path path = Paths.get(Application.APP_DIR + "work", "Tomcat", "localhost", "ROOT");
+        Path path = Paths.get(Application.getAppDir() + "work", "Tomcat", "localhost", "ROOT");
         log.info("Clean template directory " + path);
         File file = path.toFile();
         if (file.isDirectory()) {

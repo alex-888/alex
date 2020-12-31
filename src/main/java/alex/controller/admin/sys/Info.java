@@ -52,9 +52,9 @@ public class Info {
         ModelAndView modelAndView = Helper.newModelAndView("admin/sys/info/index", request);
         modelAndView.addObject("title", "系统信息");
         modelAndView.addObject("dbVersion",
-                Application.JDBC_TEMPLATE.queryForObject("select version()", String.class));
+                Application.getJdbcTemplate().queryForObject("select version()", String.class));
         modelAndView.addObject("dbTxIsolation",
-                Application.JDBC_TEMPLATE.queryForObject("SELECT @@tx_isolation", String.class));
+                Application.getJdbcTemplate().queryForObject("SELECT @@tx_isolation", String.class));
 
         modelAndView.addObject("javaOsName", System.getProperty("os.name"));
         modelAndView.addObject("javaOsVersion", System.getProperty("os.version"));
@@ -64,10 +64,10 @@ public class Info {
         modelAndView.addObject("vmInfo", System.getProperty("java.vm.info"));
         modelAndView.addObject("cpuCores", Runtime.getRuntime().availableProcessors());
         modelAndView.addObject("javaGc", gc.toString());
-        modelAndView.addObject("applicationDir", Application.APP_DIR);
+        modelAndView.addObject("applicationDir", Application.getAppDir());
         modelAndView.addObject("springBootVersion", SpringApplication.class.getPackage().getImplementationVersion());
 
-        Properties redisProperties = Objects.requireNonNull(Application.REDIS_TEMPLATE.getConnectionFactory()).getConnection().serverCommands().info();
+        Properties redisProperties = Objects.requireNonNull(Application.getRedisTemplate().getConnectionFactory()).getConnection().serverCommands().info();
         assert redisProperties != null;
         modelAndView.addObject("redisVersion", redisProperties.getProperty("redis_version"));
 

@@ -1,32 +1,23 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head th:replace="__${theme}__/components::head(~{::title},~{}, ~{})">
-    <title th:text="${siteName}" />
+    <title th:text="${siteName}"/>
 </head>
 <body>
-<header th:replace="__${theme}__/components::header" />
+<header th:replace="__${theme}__/components::header"/>
 <style>
-    #headerMenuItems {display: block}
+    #headerMenuItems {
+        display: block
+    }
 </style>
 <div class="container">
     <div style="background: #f9f2f4;width:218px;float: left">category
     </div>
-    <div style="background: #f7ecb5;width:1000px;float: right">pics</div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+    <div style="background: #f7ecb5;width:1000px;float: right; height: 307px">pics</div>
+    <div class="row" style="min-height: 100px">
+        <p style="font-size: 1.2rem;border-bottom: 2px solid #ff4a00;">title</p>
+        content</div>
 </div>
-<footer th:replace="__${theme}__/components::footer" />
+<footer th:replace="__${theme}__/components::footer"/>
 </body>
 </html>

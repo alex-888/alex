@@ -30,7 +30,7 @@ public class Cart {
         if (userToken == null) {
             json = (String) request.getSession().getAttribute(KEY);
         } else {
-            json = Application.REDIS_TEMPLATE.opsForValue().get(KEY + ":" + userToken.getId());
+            json = Application.getRedisTemplate().opsForValue().get(KEY + ":" + userToken.getId());
         }
         if (json == null || json.length() < 10) {
             items = new LinkedList<>();
@@ -73,7 +73,7 @@ public class Cart {
         int size = items.size();
 
         items.removeIf(item -> {
-            var goodsEntity = GoodsCache.getGoodsEntity(item.getGoodsId());
+            var goodsEntity = GoodsCache.getRows().get(item.getGoodsId());
             if (goodsEntity == null
                     //商品回收站
                     || (goodsEntity.getStatus() & GoodsStatus.RECYCLE_BIN) > 0
@@ -179,7 +179,7 @@ public class Cart {
             if (userToken == null) {
                 request.getSession().setAttribute(KEY, json);
             } else {
-                Application.REDIS_TEMPLATE.opsForValue().set(KEY + ":" + userToken.getId(), json);
+                Application.getRedisTemplate().opsForValue().set(KEY + ":" + userToken.getId(), json);
             }
 
         } catch (JsonProcessingException e) {

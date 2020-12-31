@@ -30,7 +30,6 @@ public class Api {
             @RequestParam String password
     ) {
         ApiJsonResult apiJsonResult = new ApiJsonResult();
-        UserService userService = Application.CONTEXT.getBean(UserService.class);
         return apiJsonResult.toString();
     }
 
@@ -85,7 +84,7 @@ public class Api {
 
     @GetMapping(path = "/user", produces = "application/json;charset=UTF-8")
     public String getUser() {
-        UserService userService = Application.CONTEXT.getBean(UserService.class);
+        UserService userService = Application.getContext().getBean(UserService.class);
         for (int i = 101; i< 1000; i++) {
             userService.register("user" + i, "111111", "localhost");
         }

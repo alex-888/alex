@@ -72,7 +72,7 @@ public class OrderService {
             }
         }
         OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setId(Application.ORDER_ID.incrementAndGet());
+        orderEntity.setId(Application.getOrderId().incrementAndGet());
         orderEntity.setNo(generalOrderNo(orderEntity.getId()));
         orderEntity.setUserId(userId);
         orderEntity.setRegion(addr.getRegion());
@@ -106,7 +106,7 @@ public class OrderService {
     public static boolean insertOrder(OrderEntity orderEntity) {
         String sql = "insert into orders (createTime, id, no, userId, region, price, shippingFee,payType,source)"
                 + "values (NOW(), ?, ?, ?, ?, ?, ?, ?, ?)";
-        if (Application.JDBC_TEMPLATE.update(sql, orderEntity.getId(), orderEntity.getNo(),
+        if (Application.getJdbcTemplate().update(sql, orderEntity.getId(), orderEntity.getNo(),
                 orderEntity.getUserId(), orderEntity.getRegion(), orderEntity.getPrice(),
                 orderEntity.getShippingFee(), orderEntity.getPayType(), orderEntity.getSource()) == 0) {
             return false;

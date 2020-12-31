@@ -1,14 +1,11 @@
 package alex.lib;
 
-import alex.Application;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -34,33 +31,6 @@ public class Crypto {
     private static final String CIPHER_ALGORITHM = "AES/GCM/NoPadding";
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static SecretKeySpec secretKeySpec;
-
-    /**
-     * 初始化密钥
-     */
-    @Autowired
-    private void initSecretKey(ConfigurableApplicationContext context) {
-        String key = context.getEnvironment().getProperty("application.key");
-        if (key == null) {
-            log.warn("need config: application.key");
-            key = "";
-        }
-        KeyGenerator kg = null;
-        SecureRandom secureRandom = null;
-        try {
-            kg = KeyGenerator.getInstance(KEY_ALGORITHM);
-            // 初始化密钥生成器，AES要求密钥长度为128位、192位、256位
-            secureRandom = SecureRandom.getInstance("SHA1PRNG");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return;
-        }
-        secureRandom.setSeed(key.getBytes());
-        kg.init(128, secureRandom);
-        SecretKey secretKey = kg.generateKey();
-        // AES密钥
-        secretKeySpec = new SecretKeySpec(secretKey.getEncoded(), KEY_ALGORITHM);
-    }
 
     /**
      * AES 解密操作
@@ -90,7 +60,7 @@ public class Crypto {
     /**
      * AES 加密操作
      *
-     * @param content     待加密内容
+     * @param content 待加密内容
      * @return 返回Base64转码后的加密数据
      */
     public static String encrypt(String content) {
@@ -123,6 +93,7 @@ public class Crypto {
             return null;
         }
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     public static String hash(String algorithm, InputStream inputStream) {
         try {
@@ -139,16 +110,47 @@ public class Crypto {
             return null;
         }
     }
+
     public static String sha256(String data) {
         return hash("SHA-256", data);
     }
+
     public static String sha256(InputStream inputStream) {
         return hash("SHA-256", inputStream);
     }
+
     public static String sha3_256(String data) {
         return hash("SHA3-256", data);
     }
+
     public static String sha3_256(InputStream inputStream) {
         return hash("SHA3-256", inputStream);
+    }
+
+    /**
+     * 初始化密钥
+     */
+    @Autowired
+    private void initSecretKey(ConfigurableApplicationContext context) {
+        String key = context.getEnvironment().getProperty("application.key");
+        if (key == null) {
+            log.warn("need config: application.key");
+            key = "";
+        }
+        KeyGenerator kg = null;
+        SecureRandom secureRandom = null;
+        try {
+            kg = KeyGenerator.getInstance(KEY_ALGORITHM);
+            // 初始化密钥生成器，AES要求密钥长度为128位、192位、256位
+            secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return;
+        }
+        secureRandom.setSeed(key.getBytes());
+        kg.init(128, secureRandom);
+        SecretKey secretKey = kg.generateKey();
+        // AES密钥
+        secretKeySpec = new SecretKeySpec(secretKey.getEncoded(), KEY_ALGORITHM);
     }
 }

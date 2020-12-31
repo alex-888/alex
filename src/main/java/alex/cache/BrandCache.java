@@ -7,30 +7,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class BrandCache {
     private static BrandService BrandService;
-    private static List<BrandEntity> rows;
+    private static Map<Long, BrandEntity> rows;
+
+    @PostConstruct
+    public synchronized static void init() {
+        Map<Long, BrandEntity> map = new ConcurrentHashMap<>();
+        BrandService.findAll().forEach(brandEntity -> map.put(brandEntity.getId(), brandEntity));
+        rows = map;
+    }
+
+    public static Map<Long, BrandEntity> getRows() {
+        return rows;
+    }
 
     @Autowired
     private void autowire(BrandService service) {
         BrandService = service;
-    }
-
-    @PostConstruct
-    public synchronized static void init() {
-        rows = BrandService.findAll();
-    }
-
-
-    public static BrandEntity getEntityById(long id) {
-        return rows.stream().filter(row -> row.getId() == id).findFirst().orElse(null);
-    }
-
-    public static List<BrandEntity> getRows() {
-        return rows;
     }
 
 

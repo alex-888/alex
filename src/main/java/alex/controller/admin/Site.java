@@ -85,7 +85,7 @@ public class Site {
             uri += "/" + file.getOriginalFilename();
         }
 
-        try (Storage storage = Application.CONTEXT.getBean(Storage.class)) {
+        try (Storage storage = Application.getContext().getBean(Storage.class)) {
             UploadResult uploadResult = storage.upload(file.getInputStream(), uri);
             if (uploadResult.getErr() == null) {
                 jsonResult.setUrl(uploadResult.getUrl());

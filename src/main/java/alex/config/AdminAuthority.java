@@ -51,7 +51,7 @@ public class AdminAuthority {
         rules.put("其它-上传文件", new String[]{"get@/admin/upload", "post@/admin/upload"});
 
         if (roleId != 0) {
-            AdminRoleRepository adminRoleRepository = Application.CONTEXT.getBean(AdminRoleRepository.class);
+            AdminRoleRepository adminRoleRepository = Application.getContext().getBean(AdminRoleRepository.class);
             AdminRoleEntity adminRoleEntity = adminRoleRepository.findById(roleId).orElse(null);
             if (adminRoleEntity == null) {
                 rules.clear();

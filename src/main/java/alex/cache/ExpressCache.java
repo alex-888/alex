@@ -30,7 +30,7 @@ public class ExpressCache {
     @PostConstruct
     public static synchronized void init() {
         companies = expressCompanyRepository.findAll();
-        var list = Application.JDBC_TEMPLATE.queryForList("select * from system where entity='shipping'");
+        var list = Application.getJdbcTemplate().queryForList("select * from system where entity='shipping'");
         String json = null;
         ObjectMapper objectMapper = new ObjectMapper();
         for (var map : list) {

@@ -1,12 +1,16 @@
 package alex.entity;
 
+import org.springframework.jdbc.core.RowMapper;
+
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "goods")
-public class GoodsEntity {
+public class GoodsEntity implements RowMapper<GoodsEntity> {
     private long id;
     private long brandId;
     private long cateId;
@@ -146,5 +150,27 @@ public class GoodsEntity {
 
     public void setUpdateAt(Timestamp updateAt) {
         this.updateAt = updateAt;
+    }
+
+
+    @Override
+    public GoodsEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+        GoodsEntity entity = new GoodsEntity();
+        entity.setId(rs.getLong("id"));
+        entity.setBrandId(rs.getLong("brandId"));
+        entity.setCateId(rs.getLong("cateId"));
+        entity.setCreateAt(rs.getTimestamp("createAt"));
+        entity.setDes(rs.getString("des"));
+        entity.setImgs(rs.getString("imgs"));
+        entity.setName(rs.getString("name"));
+        entity.setPrice(rs.getLong("price"));
+        entity.setRecommend(rs.getLong("recommend"));
+        entity.setReleased(rs.getDate("released"));
+        entity.setSpec(rs.getString("spec"));
+        entity.setStatus(rs.getLong("status"));
+        entity.setStock(rs.getLong("stock"));
+        entity.setUpdateAt(rs.getTimestamp("updateAt"));
+        entity.setWeight(rs.getLong("weight"));
+        return entity;
     }
 }

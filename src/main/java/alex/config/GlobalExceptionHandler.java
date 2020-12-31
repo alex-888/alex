@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public void sizeLimitExceededException(HttpServletRequest request, HttpServletResponse response, Exception e) {
-        TemplateEngine templateEngine = Application.CONTEXT.getBean(TemplateEngine.class);
+        TemplateEngine templateEngine = Application.getContext().getBean(TemplateEngine.class);
         Context context = new Context();
         context.setVariable("statusCode", HttpStatus.PAYLOAD_TOO_LARGE.value());
         context.setVariable("error", HttpStatus.PAYLOAD_TOO_LARGE.getReasonPhrase());

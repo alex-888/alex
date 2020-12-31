@@ -28,8 +28,8 @@ public class UserToken extends Token {
 
 
     public static void deleteToken(long uid, String redisKey) {
-        Application.REDIS_TEMPLATE.delete(redisKey);
-        Application.REDIS_TEMPLATE.opsForSet().remove(REDIS_USER_PREFIX + uid, redisKey);
+        Application.getRedisTemplate().delete(redisKey);
+        Application.getRedisTemplate().opsForSet().remove(REDIS_USER_PREFIX + uid, redisKey);
     }
 
     /**
@@ -40,14 +40,14 @@ public class UserToken extends Token {
         if (session == null) {
             return null;
         }
-        String redisKey = Application.REDIS_SESSION_NAMESPACE + "sessions:" + session.getId();
+        String redisKey = Application.getRedisSessionNamespace() + "sessions:" + session.getId();
         Object obj = session.getAttribute(KEY);
         if (obj instanceof String) {
             UserToken userToken = UserToken.from((String) obj);
             if (userToken == null) {
                 return null;
             }
-            Boolean exists = Application.REDIS_TEMPLATE.opsForSet().isMember(REDIS_USER_PREFIX + userToken.getId(), redisKey);
+            Boolean exists = Application.getRedisTemplate().opsForSet().isMember(REDIS_USER_PREFIX + userToken.getId(), redisKey);
             if (exists == null || !exists) {
                 Helper.flushSession(session);
                 return null;
@@ -84,9 +84,9 @@ public class UserToken extends Token {
      * @param session http session
      */
     public void save(HttpSession session) {
-        String redisKey = Application.REDIS_SESSION_NAMESPACE + "sessions:" + session.getId();
+        String redisKey = Application.getRedisSessionNamespace() + "sessions:" + session.getId();
         session.setAttribute(KEY, toString());
-        Application.REDIS_TEMPLATE.opsForSet().add(REDIS_USER_PREFIX + getId(), redisKey);
+        Application.getRedisTemplate().opsForSet().add(REDIS_USER_PREFIX + getId(), redisKey);
         updateRedis(redisKey);
     }
 
@@ -104,7 +104,7 @@ public class UserToken extends Token {
      */
     @SuppressWarnings("EmptyCatchBlock")
     private void updateRedis(String excludeRedisKey) {
-        Set<String> set = Application.REDIS_TEMPLATE.opsForSet().members(REDIS_USER_PREFIX + getId());
+        Set<String> set = Application.getRedisTemplate().opsForSet().members(REDIS_USER_PREFIX + getId());
         if (set == null) {
             return;
         }
@@ -114,7 +114,7 @@ public class UserToken extends Token {
                 return;
             }
             UserToken userToken = null;
-            RedisConnection redisConnection = Objects.requireNonNull(Application.REDIS_TEMPLATE.getConnectionFactory()).getConnection();
+            RedisConnection redisConnection = Objects.requireNonNull(Application.getRedisTemplate().getConnectionFactory()).getConnection();
             try {
 
                 byte[] objectData = redisConnection.hGet(redisKey.getBytes(), ("sessionAttr:" + KEY).getBytes());

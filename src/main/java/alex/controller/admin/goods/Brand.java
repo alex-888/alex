@@ -2,7 +2,6 @@ package alex.controller.admin.goods;
 
 import alex.Application;
 import alex.cache.BrandCache;
-import alex.cache.CategoryCache;
 import alex.entity.BrandEntity;
 import alex.lib.AdminHelper;
 import alex.lib.Helper;
@@ -36,14 +35,14 @@ public class Brand {
             jsonResult.setMsg("删除失败,指定的商品品牌不存在");
             return jsonResult.toString();
         }
-        long num = Helper.longValue(Application.JDBC_TEMPLATE.queryForObject("select count(*) from goods where cateId =?",
-                new Object[]{id}, Long.class));
+        long num = Helper.longValue(Application.getJdbcTemplate().queryForObject("select count(*) from goods where cateId =?",
+                Long.class, id));
         if (num > 0) {
             jsonResult.setMsg("删除失败,该品牌的商品累计个数:" + num);
             return jsonResult.toString();
         }
         brandRepository.delete(brandEntity);
-        BrandCache.init();
+        BrandCache.getRows().remove(id);
         jsonResult.setMsg("已删除商品品牌: " + brandEntity.getName());
         jsonResult.setUrl("list");
         return AdminHelper.msgPage(jsonResult, request);
@@ -100,7 +99,7 @@ public class Brand {
         brandEntity.setName(name);
         brandEntity.setNote(note);
         brandRepository.save(brandEntity);
-        BrandCache.init();
+        BrandCache.getRows().put(brandEntity.getId(), brandEntity);
         jsonResult.setUrl("list");
         return AdminHelper.msgPage(jsonResult, request);
     }

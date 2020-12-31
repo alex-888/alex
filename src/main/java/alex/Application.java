@@ -1,8 +1,10 @@
 package alex;
 
+import alex.entity.GoodsEntity;
 import alex.lib.Helper;
 import alex.lib.ScheduledTasks;
 import alex.lib.ShutdownThread;
+import org.hibernate.annotations.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +27,17 @@ import java.util.regex.Pattern;
 @SpringBootApplication
 public class Application {
     // application dir
-    public static String APP_DIR;
-    public static ConfigurableApplicationContext CONTEXT;
-    public static JdbcTemplate JDBC_TEMPLATE;
-    public static AtomicLong ORDER_ID;
-    public static StringRedisTemplate REDIS_TEMPLATE;
-    public static String REDIS_SESSION_NAMESPACE;
+    private static String appDir;
+    private static ConfigurableApplicationContext context;
+    private static JdbcTemplate jdbcTemplate;
+    private static AtomicLong orderId;
+    private static StringRedisTemplate redisTemplate;
+    private static String redisSessionNamespace;
 
     /**
-     * get application dir
-     *
-     * @return application dir
+     * init application dir
      */
-    private static String getAppDir() {
+    private void initAppDir() {
         String path = Application.class.getProtectionDomain().getCodeSource().getLocation().toString();
         Pattern pattern = Pattern.compile("^jar:file:(.+?)!");
         Matcher matcher = pattern.matcher(path);
@@ -47,23 +47,47 @@ public class Application {
             if (os.contains("win") && dir.charAt(0) == '/') {
                 dir = dir.substring(1);
             }
-            pattern = Pattern.compile("^(.*)(\\\\|/)");
+            pattern = Pattern.compile("^(.*)([\\\\/])");
             matcher = pattern.matcher(dir);
             if (matcher.find()) {
                 if (os.contains("win")) {
-                    return matcher.group(1).replace("/", "\\") + "\\";
+                    appDir = matcher.group(1).replace("/", "\\") + "\\";
                 }
-                return matcher.group(1) + "/";
+                appDir = matcher.group(1) + "/";
             } else {
                 Logger LOGGER = LoggerFactory.getLogger(Application.class);
                 LOGGER.error(String.format("not found application dir: %s", dir));
                 System.exit(-1);
-                return null;
             }
 
         } else {
-            return System.getProperty("user.dir") + File.separator;
+            appDir = System.getProperty("user.dir") + File.separator;
         }
+    }
+
+    public static String getAppDir() {
+        return appDir;
+    }
+
+    public static ConfigurableApplicationContext getContext() {
+        return context;
+    }
+
+    @NotFound
+    public static JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
+
+    public static StringRedisTemplate getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    public static String getRedisSessionNamespace() {
+        return redisSessionNamespace;
+    }
+
+    public static AtomicLong getOrderId() {
+        return orderId;
     }
 
     public static void main(String[] args) {
@@ -74,10 +98,10 @@ public class Application {
 
     @Autowired
     private void setConfigurableApplicationContext(ConfigurableApplicationContext context) {
-        CONTEXT = context;
-        APP_DIR = getAppDir();
+        initAppDir();
+        Application.context = context;
         Environment env = context.getEnvironment();
-        REDIS_SESSION_NAMESPACE = env.getProperty("spring.session.redis.namespace", "spring:session:");
+        redisSessionNamespace = env.getProperty("spring.session.redis.namespace", "spring:session:");
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
         ScheduledTasks scheduledTasks = context.getBean(ScheduledTasks.class);
         scheduledTasks.cleanTemplateFiles();
@@ -85,13 +109,14 @@ public class Application {
 
     @Autowired
     private void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        JDBC_TEMPLATE = jdbcTemplate;
+        Application.jdbcTemplate = jdbcTemplate;
+        var g = jdbcTemplate.query("select * from goods", new GoodsEntity());
         var id = jdbcTemplate.queryForList("SELECT MAX(id) as id FROM orders").get(0).get("id");
-        ORDER_ID = id == null ? new AtomicLong(0L) : new AtomicLong(Helper.longValue(id));
+        Application.orderId = id == null ? new AtomicLong(0L) : new AtomicLong(Helper.longValue(id));
     }
 
     @Autowired
     private void setRedisTemplate(StringRedisTemplate redisTemplate) {
-        REDIS_TEMPLATE = redisTemplate;
+        Application.redisTemplate = redisTemplate;
     }
 }

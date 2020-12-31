@@ -56,8 +56,8 @@
             <label for="brandId">品牌</label>
             <select class="form-control" id="brandId" name="brandId" required>
                 <option value="0">请选择商品品牌</option>
-                <option th:each="brand : ${brandRows}" th:text="${brand.name}" th:value="${brand.id}"
-                        th:selected="${brand.id == goods.brandId}"></option>
+                <option th:each="brand : ${brandRows}" th:text="${brand.value.name}" th:value="${brand.key}"
+                        th:selected="${brand.key == goods.brandId}"></option>
             </select>
         </div>
         <div class="form-group col-md-6"></div>

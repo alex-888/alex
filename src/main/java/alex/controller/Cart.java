@@ -52,7 +52,7 @@ public class Cart {
         long goodsId = Helper.longValue(request.getParameter("gid"));
         long specId = Helper.longValue(request.getParameter("specId"));
         long num = Helper.longValue(request.getParameter("num"));
-        GoodsEntity goodsEntity = GoodsCache.getGoodsEntity(goodsId);
+        GoodsEntity goodsEntity = GoodsCache.getRows().get(goodsId);
         var goodsSpecEntities = GoodsSpecCache.getGoodsSpecEntities(goodsId);
         var cart = new alex.lib.Cart(request);
         cart.add(goodsId, specId, num);
