@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head th:replace="__${theme}__/components::head(~{::title},~{}, ~{::link})">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="__${theme}__/components::head(~{::title},~{}, ~{})">
     <title th:text="${siteName}"/>
-    <link rel="stylesheet" th:href="${#helpers.retouch('/theme/' + theme + '/list.css')}">
 </head>
 <body>
 <header th:replace="__${theme}__/components::header"/>

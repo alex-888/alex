@@ -9,7 +9,7 @@ public class CategoryEntity {
     private long id;
     private long parentId;
     private String name;
-    private long sort;
+    private long recommend;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,11 +45,11 @@ public class CategoryEntity {
         this.parentId = parentId;
     }
 
-    public long getSort() {
-        return sort;
+    public long getRecommend() {
+        return recommend;
     }
 
-    public void setSort(long sort) {
-        this.sort = sort;
+    public void setRecommend(long recommend) {
+        this.recommend = recommend;
     }
 }

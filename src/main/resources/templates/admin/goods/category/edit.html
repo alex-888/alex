@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/components::head(~{}, ~{})">
 </head>
 <body class="container-fluid">
@@ -23,9 +23,9 @@
             </select>
         </div>
         <div class="form-group col-md-6">
-            <label for="sort">排序</label>
-            <input type="number" class="form-control" id="sort" name="sort" placeholder="排序"
-                   th:value="${item.sort}" required>
+            <label for="recommend">推荐</label>
+            <input type="number" class="form-control" id="recommend" name="recommend" placeholder="排序"
+                   th:value="${item.recommend}" required>
         </div>
         <div class="form-group col-md-6">
             <label>首页显示</label>

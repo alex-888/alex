@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="__${theme}__/components::head(~{::title},~{}, ~{})">
     <title th:text="${siteName}"/>
 </head>
@@ -14,9 +14,22 @@
     <div style="background: #f9f2f4;width:218px;float: left">category
     </div>
     <div style="background: #f7ecb5;width:1000px;float: right; height: 307px">pics</div>
-    <div class="row" style="min-height: 100px">
-        <p style="font-size: 1.2rem;border-bottom: 2px solid #ff4a00;">title</p>
-        content</div>
+    <div class="row" style="min-height: 100px" th:each="item : ${recommend}">
+        <p style="font-size: 1.2rem;border-bottom: 2px solid #ff4a00;">
+            <a th:href="@{/list(cid=${item.id})}" th:text="${item.name}"></a></p>
+        <div class="goodsItemBg" th:each="goods,iter: ${item.goodsList}" th:if="${iter.index < 5}">
+            <div class="goodsItem">
+                <a class="img" th:href="@{/goods/{id}.html(id=${goods.id})}">
+                    <img th:src="${#helpers.imgZoom(goods.img, 220, 220)}">
+                </a>
+                <div class="price" th:text="${#helpers.priceFormat(goods.price)}"></div>
+                <div>
+                    <a class="title" th:text="${goods.name}" th:href="@{/goods/{id}.html(id=${goods.id})}"
+                       th:title="${goods.name}"></a></div>
+            </div>
+        </div>
+
+    </div>
 </div>
 <footer th:replace="__${theme}__/components::footer"/>
 </body>

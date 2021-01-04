@@ -1,10 +1,8 @@
 package alex;
 
-import alex.entity.GoodsEntity;
 import alex.lib.Helper;
 import alex.lib.ScheduledTasks;
 import alex.lib.ShutdownThread;
-import org.hibernate.annotations.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +31,48 @@ public class Application {
     private static AtomicLong orderId;
     private static StringRedisTemplate redisTemplate;
     private static String redisSessionNamespace;
+
+    public static String getAppDir() {
+        return appDir;
+    }
+
+    public static ConfigurableApplicationContext getContext() {
+        return context;
+    }
+
+    public static JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
+
+    @Autowired
+    private void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        Application.jdbcTemplate = jdbcTemplate;
+        var id = jdbcTemplate.queryForList("SELECT MAX(id) as id FROM orders").get(0).get("id");
+        Application.orderId = id == null ? new AtomicLong(0L) : new AtomicLong(Helper.longValue(id));
+    }
+
+    public static StringRedisTemplate getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    @Autowired
+    private void setRedisTemplate(StringRedisTemplate redisTemplate) {
+        Application.redisTemplate = redisTemplate;
+    }
+
+    public static String getRedisSessionNamespace() {
+        return redisSessionNamespace;
+    }
+
+    public static AtomicLong getOrderId() {
+        return orderId;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication app = new SpringApplication(Application.class);
+        app.setBannerMode(Banner.Mode.OFF);
+        app.run(args);
+    }
 
     /**
      * init application dir
@@ -65,37 +105,6 @@ public class Application {
         }
     }
 
-    public static String getAppDir() {
-        return appDir;
-    }
-
-    public static ConfigurableApplicationContext getContext() {
-        return context;
-    }
-
-    @NotFound
-    public static JdbcTemplate getJdbcTemplate() {
-        return jdbcTemplate;
-    }
-
-    public static StringRedisTemplate getRedisTemplate() {
-        return redisTemplate;
-    }
-
-    public static String getRedisSessionNamespace() {
-        return redisSessionNamespace;
-    }
-
-    public static AtomicLong getOrderId() {
-        return orderId;
-    }
-
-    public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(Application.class);
-        app.setBannerMode(Banner.Mode.OFF);
-        app.run(args);
-    }
-
     @Autowired
     private void setConfigurableApplicationContext(ConfigurableApplicationContext context) {
         initAppDir();
@@ -105,18 +114,5 @@ public class Application {
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
         ScheduledTasks scheduledTasks = context.getBean(ScheduledTasks.class);
         scheduledTasks.cleanTemplateFiles();
-    }
-
-    @Autowired
-    private void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-        Application.jdbcTemplate = jdbcTemplate;
-        var g = jdbcTemplate.query("select * from goods", new GoodsEntity());
-        var id = jdbcTemplate.queryForList("SELECT MAX(id) as id FROM orders").get(0).get("id");
-        Application.orderId = id == null ? new AtomicLong(0L) : new AtomicLong(Helper.longValue(id));
-    }
-
-    @Autowired
-    private void setRedisTemplate(StringRedisTemplate redisTemplate) {
-        Application.redisTemplate = redisTemplate;
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="__${theme}__/components::head(~{::title},~{::link},~{})">
     <title th:text="用户中心- + ${siteName}"/>
     <link rel="stylesheet" th:href="${#helpers.retouch('/theme/' + theme + '/user.css')}">

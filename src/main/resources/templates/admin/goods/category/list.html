@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="admin/components::head(~{}, ~{})">
 </head>
 <body class="container-fluid">
@@ -12,7 +12,7 @@
     <thead>
     <tr>
         <th>分类名称</th>
-        <th>排序</th>
+        <th>推荐</th>
         <th>首页显示</th>
         <th>操作</th>
     </tr>
@@ -20,7 +20,7 @@
     <tbody>
     <tr th:each="item : ${list}">
         <td th:text="${item.name}"></td>
-        <td th:text="${item.sort}"></td>
+        <td th:text="${item.recommend}"></td>
         <td th:text="${item.i == 1 ? '是' : '否'}"></td>
         <td>
             <a th:href="'edit?parentId=' + ${item.id}"><i class="fa fa-plus"></i></a>&nbsp;&nbsp;

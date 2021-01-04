@@ -16,7 +16,7 @@ public class CategoryService {
 
     public List<CategoryEntity> findAll() {
         Sort sort = Sort.by(Sort.Direction.ASC, "parentId")
-                .and(Sort.by(Sort.Direction.ASC, "sort"))
+                .and(Sort.by(Sort.Direction.DESC, "recommend"))
                 .and(Sort.by(Sort.Direction.ASC, "id"));
         return categoryRepository.findAll(sort);
     }

@@ -2,14 +2,14 @@ package alex.controller;
 
 import alex.Application;
 import alex.cache.CategoryCache;
+import alex.cache.GoodsCache;
 import alex.cache.RegionCache;
+import alex.entity.GoodsEntity;
 import alex.lib.Captcha;
 import alex.lib.Helper;
 import alex.lib.Pagination;
-import alex.lib.Region;
 import alex.storage.LocalStorage;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +21,10 @@ import org.thymeleaf.context.Context;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class Site {
@@ -37,7 +33,7 @@ public class Site {
      */
     @RequestMapping(value = "captcha")
     @ResponseBody
-    public String captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setHeader("Cache-Control", "no-store");
         response.setContentType("image/png");
 
@@ -55,19 +51,19 @@ public class Site {
                 os.close();
             }
         }
-        return null;
     }
 
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView getIndex(HttpServletRequest request) {
         ModelAndView modelAndView = Helper.newModelAndView("index", request);
+        modelAndView.addObject("recommend", GoodsCache.getRecommend());
         return modelAndView;
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView getList(HttpServletRequest request) {
-        StringBuilder sql = new StringBuilder("select id,imgs,name,price from goods where status & 0b10");
+        StringBuilder sql = new StringBuilder("select id,imgs,name,price from goods where status & 0b10 > 0");
         ModelAndView modelAndView = Helper.newModelAndView("list", request);
         long cid = Helper.longValue(request.getParameter("cid"));
         if (cid > 0 && CategoryCache.getEntityById(cid) != null) {
@@ -137,10 +133,17 @@ public class Site {
     }
 
     @RequestMapping(value = "test", method = RequestMethod.GET)
-    public ModelAndView getTest(Model model, HttpServletRequest request) {
-        return Helper.msgPage(request.getParameter("msg"),
-                request.getParameter("backUrl"),
-                request);
+    @ResponseBody
+    public String getTest(HttpServletRequest request) {
+        Set<Long> nums = new HashSet<>();
+        nums.add(1L);
+        nums.add(2L);
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("ids", nums);
+        Application.getJdbcTemplate().queryForList(
+                "select * from goods where id in (?)",
+                mapSqlParameterSource);
+        return "";
     }
 
     @RequestMapping(value = "test1", method = RequestMethod.GET)

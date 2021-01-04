@@ -1,7 +1,6 @@
 package alex.cache;
 
 import alex.entity.CategoryEntity;
-import alex.entity.GoodsEntity;
 import alex.service.CategoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,10 +10,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-@Component
+@Component("CategoryCache")
 public class CategoryCache {
     private static Map<Long, List<CategoryEntity>> categoryPaths;
     private static Map<Long, List<CategoryEntity>> childrenMap;
@@ -31,7 +29,7 @@ public class CategoryCache {
         initNodes();
 
         Map<Long, List<CategoryEntity>> categoryPaths1 = new HashMap<>();
-        long parentId = 0;
+        long parentId;
         for (CategoryEntity row : rows) {
             List<CategoryEntity> list = new ArrayList<>();
             list.add(row);
@@ -124,7 +122,7 @@ public class CategoryCache {
             map.put("id", row.getId());
             map.put("name", strPad + row.getName());
             map.put("i", row.getI());
-            map.put("sort", row.getSort());
+            map.put("recommend", row.getRecommend());
             map.put("parentId", row.getParentId());
             list.add(map);
             list.addAll(initList(row.getId(), depth));
@@ -171,8 +169,6 @@ public class CategoryCache {
 
     public static class CategoryNode {
         private final List<CategoryNode> childNodes = new LinkedList<>();
-        // 当前分类下的推荐商品
-        private List<GoodsEntity> goods;
         private long id;
         private String name;
 

@@ -15,8 +15,9 @@ a:hover, a.active {
 a:hover .red {
     color: #D02727;
 }
+
 .bg-light {
-    background-color: #f8f9fa!important;
+    background-color: #f8f9fa !important;
 }
 
 .blue {
@@ -554,6 +555,7 @@ html {
 img {
     border: none;
 }
+
 input:not([type=checkbox]), select {
     height: 2.8rem;
     padding: 0.1rem 0.3rem;
@@ -739,13 +741,14 @@ th {
 .text-primary {
     color: #337ab7;
 }
+
 .text-secondary {
-    color: #6c757d!important;
-}
-.text-success {
-    color: #28a745!important;
+    color: #6c757d !important;
 }
 
+.text-success {
+    color: #28a745 !important;
+}
 
 .pageFooter {
     background: #333;
@@ -772,7 +775,59 @@ th {
     color: #e6e6e6;
 }
 
-
 .underline {
     text-decoration: underline;
+}
+/* list page */
+.sort {
+    background-color: #f1f1f1;
+    border: 1px solid #e7e3e7;
+    display: block;
+    padding: 0.8rem 1.1rem;
+    margin-bottom: 1.5rem;
+}
+.sort a + a {
+    margin-left: 0.8rem;
+}
+
+.goodsItemBg {
+    float: left;
+    position: relative;
+    width: 20%;
+    border: 1px solid #fff;
+    min-height: 320px;
+    padding: 16px 0 16px 0;
+}
+
+.goodsItem {
+    margin: auto;
+    width: 220px;
+}
+
+.goodsItemBg:hover {
+    box-shadow: 0 0 6px 0 #dedede;
+    border: 1px solid #dedede;
+}
+
+.goodsItem img {
+    height: 220px;
+    width: 220px;
+}
+
+.goodsItem .price {
+    display: block;
+    font-size: 1.2rem;
+}
+
+.goodsItem .price::before {
+    padding-right: 1px;
+}
+
+.goodsItem .title {
+    display: block;
+    width: 100%;
+    line-height: 1.5em;
+    height: 4.5em;
+    word-break: break-all;
+    overflow: hidden;
 }

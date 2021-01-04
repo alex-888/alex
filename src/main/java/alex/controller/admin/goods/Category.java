@@ -69,7 +69,7 @@ public class Category {
         } else {
             categoryEntity = new CategoryEntity();
             categoryEntity.setParentId(Helper.longValue(request.getParameter("parentId")));
-            categoryEntity.setSort(50);
+            categoryEntity.setRecommend(1000);
             modelAndView.addObject("title", "新建商品分类");
         }
         modelAndView.addObject("list", CategoryCache.getList());
@@ -109,7 +109,7 @@ public class Category {
         categoryEntity.setI(i);
         categoryEntity.setName(name);
         categoryEntity.setParentId(parentId);
-        categoryEntity.setSort(Helper.longValue(request.getParameter("sort")));
+        categoryEntity.setRecommend(Helper.longValue(request.getParameter("recommend")));
         categoryRepository.save(categoryEntity);
         CategoryCache.init();
         jsonResult.setUrl("list");

@@ -76,10 +76,11 @@ public class UserService {
      * @return error msg
      */
 
+    @Transactional
     public String register(String name, String password, String registerIp) {
         String salt = Helper.randomString(4);
-        if (Application.getJdbcTemplate().queryForObject("select count(*) from users where name=?", Integer.class, name) > 0) {
-            return "此用户已被注册";
+        if (userRepository.findByName(name) != null) {
+            return "此用户已被注册1";
         }
         try {
             Application.getJdbcTemplate().update("insert into users (name, password, salt, registerTime, registerIp) values (?,?,?,now(),?)",
