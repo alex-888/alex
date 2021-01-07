@@ -21,6 +21,7 @@ import org.thymeleaf.context.Context;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -134,16 +135,18 @@ public class Site {
 
     @RequestMapping(value = "test", method = RequestMethod.GET)
     @ResponseBody
+
     public String getTest(HttpServletRequest request) {
-        Set<Long> nums = new HashSet<>();
-        nums.add(1L);
-        nums.add(2L);
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("ids", nums);
-        Application.getJdbcTemplate().queryForList(
-                "select * from goods where id in (?)",
-                mapSqlParameterSource);
+        Application.getJdbcTemplate().update("update goods set price = price + 1 where id =4");
+        Application.getJdbcTemplate().update("update goods set price = price + 2 where id =4");
+        tt();
         return "";
+    }
+
+    @Transactional
+    public void tt() {
+        Application.getJdbcTemplate().update("update goods set price = price + 3 where id =4");
+        Application.getJdbcTemplate().update("update goods set price = price + 4 where id =4");
     }
 
     @RequestMapping(value = "test1", method = RequestMethod.GET)

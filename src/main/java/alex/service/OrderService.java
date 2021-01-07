@@ -1,15 +1,12 @@
 package alex.service;
 
 import alex.Application;
-import alex.entity.GoodsEntity;
-import alex.entity.OrderEntity;
-import alex.entity.UserAddressEntity;
-import alex.entity.UserEntity;
+import alex.entity.*;
 import alex.lib.Cart;
 import alex.lib.GoodsStatus;
 import alex.lib.Helper;
 import alex.repository.GoodsRepository;
-import alex.repository.OrderRepository;
+import alex.repository.GoodsSpecRepository;
 import alex.repository.UserAddressRepository;
 import alex.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,13 +24,41 @@ public class OrderService {
     GoodsRepository goodsRepository;
 
     @Resource
-    private OrderRepository orderRepository;
+    GoodsSpecRepository goodsSpecRepository;
+
+    @Resource
+    OrderGoodsService orderGoodsService;
 
     @Resource
     UserAddressRepository userAddressRepository;
 
     @Resource
     UserRepository userRepository;
+
+    /**
+     * 根据订单ID生成订单号
+     *
+     * @param orderId 订单ID
+     * @return 订单号
+     */
+    public static long generalOrderNo(long orderId) {
+        String str = Helper.dateFormat(new Date(), "yyMMdd");
+        String str1 = String.format("%06d", orderId * 997 % 1000000);
+        return Helper.longValue(str + str1);
+    }
+
+    /**
+     * 数据库插入订单
+     *
+     * @param ety orderEntity
+     */
+    public void insertOrder(OrderEntity ety) {
+        String sql = "insert into orders (createTime, id, no, userId, region, consignee, phone, price, shippingFee,payType,source)"
+                + "values (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Application.getJdbcTemplate().update(sql, ety.getId(), ety.getNo(), ety.getUserId(), ety.getRegion(),
+                ety.getConsignee(), ety.getPhone(), ety.getPrice(), ety.getShippingFee(), ety.getPayType(),
+                ety.getSource());
+    }
 
     /**
      * 下单
@@ -65,53 +89,65 @@ public class OrderService {
             }
             cartItems.add(item);
             GoodsEntity goodsEntity = goodsRepository.findByIdForUpdate(item.getGoodsId());
-            if ((goodsEntity.getStatus() & GoodsStatus.RECYCLE_BIN) > 0
+            if (goodsEntity == null
+                    || (goodsEntity.getStatus() & GoodsStatus.RECYCLE_BIN) > 0
                     || (goodsEntity.getStatus() & GoodsStatus.ON_SELL) == 0
             ) {
                 return orderInfo.setErr("商品已下架");
             }
+            // 库存
+            if (item.getSpecId() == 0) {
+                if (goodsEntity.getStock() < item.getNum()) {
+                    return orderInfo.setErr("库存不足:" + goodsEntity.getName());
+                }
+            } else {
+                GoodsSpecEntity goodsSpecEntity = goodsSpecRepository.findByIdForUpdate(item.getSpecId());
+                if (goodsSpecEntity == null || goodsSpecEntity.getGoodsId() != item.getGoodsId()) {
+                    return orderInfo.setErr("规格数据错误:" + goodsEntity.getName());
+                }
+                if (goodsSpecEntity.getStock() < item.getNum()) {
+                    return orderInfo.setErr("库存不足:" + goodsEntity.getName());
+                }
+            }
         }
+        // 创建订单信息
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setId(Application.getOrderId().incrementAndGet());
         orderEntity.setNo(generalOrderNo(orderEntity.getId()));
         orderEntity.setUserId(userId);
         orderEntity.setRegion(addr.getRegion());
+        orderEntity.setConsignee(addr.getConsignee());
+        orderEntity.setPhone(addr.getPhone());
         orderEntity.setPrice(sumPrice);
         orderEntity.setShippingFee(shippingFee);
+
+        // 扣库存，创建订单商品
+        cartItems.forEach(item -> {
+            if (item.getSpecId() == 0) {
+                Application.getJdbcTemplate().update(
+                        "update goods set stock=stock - ? where id = ?",
+                        item.getNum(), item.getGoodsId());
+            } else {
+                Application.getJdbcTemplate().update(
+                        "update goodsSpec set stock=stock - ? where id = ?",
+                        item.getNum(), item.getSpecId());
+            }
+            OrderGoodsEntity orderGoodsEntity = new OrderGoodsEntity();
+            orderGoodsEntity.setOrderId(orderEntity.getId());
+            orderGoodsEntity.setGoodsId(item.getGoodsId());
+            orderGoodsEntity.setGoodsName(item.getGoodsName());
+            orderGoodsEntity.setSpecId(item.getSpecId());
+            orderGoodsEntity.setSpecDes(item.getSpecDes());
+            orderGoodsEntity.setPrice(item.getGoodsPrice());
+            orderGoodsEntity.setWeight(item.getGoodsWeight());
+            orderGoodsEntity.setImg(item.getGoodsImg());
+            orderGoodsService.insertOrderGoods(orderGoodsEntity);
+        });
         insertOrder(orderEntity);
         cart.del(cartItems);
         orderInfo.setOrderNo(orderEntity.getNo());
         return orderInfo;
 
-    }
-
-    /**
-     * 根据订单ID生成订单号
-     *
-     * @param orderId 订单ID
-     * @return 订单号
-     */
-    public static long generalOrderNo(long orderId) {
-        String str = Helper.dateFormat(new Date(), "yyMMdd");
-        String str1 = String.format("%06d", orderId * 997 % 1000000);
-        return Helper.longValue(str + str1);
-    }
-
-    /**
-     * 数据库插入订单
-     *
-     * @param orderEntity orderEntity
-     * @return orderId
-     */
-    public static boolean insertOrder(OrderEntity orderEntity) {
-        String sql = "insert into orders (createTime, id, no, userId, region, price, shippingFee,payType,source)"
-                + "values (NOW(), ?, ?, ?, ?, ?, ?, ?, ?)";
-        if (Application.getJdbcTemplate().update(sql, orderEntity.getId(), orderEntity.getNo(),
-                orderEntity.getUserId(), orderEntity.getRegion(), orderEntity.getPrice(),
-                orderEntity.getShippingFee(), orderEntity.getPayType(), orderEntity.getSource()) == 0) {
-            return false;
-        }
-        return true;
     }
 
     public static class OrderInfo {

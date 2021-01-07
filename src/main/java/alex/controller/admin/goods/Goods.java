@@ -96,7 +96,6 @@ public class Goods {
             return AdminHelper.msgPage(jsonResult, request);
         }
         Application.getJdbcTemplate().update("delete from goodsSpec where goodsId = ?", id);
-        GoodsCache.getRows().remove(id);
         jsonResult.setMsg("删除成功");
         return AdminHelper.msgPage(jsonResult, request);
     }
@@ -382,9 +381,6 @@ public class Goods {
             }
             goodsSpecRepository.deleteByGoodsIdAndIdNotIn(id, deleteSpecIds);
         }
-        GoodsCache.getRows().put(goodsEntity.getId(), goodsEntity);
-        GoodsSpecCache.updateByGoods(goodsEntity);
-
         if (id > 0) {
             jsonResult.setMsg("已完成商品修改");
         } else {

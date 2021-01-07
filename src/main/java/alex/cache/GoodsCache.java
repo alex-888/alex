@@ -1,10 +1,7 @@
 package alex.cache;
 
 import alex.Application;
-import alex.entity.GoodsEntity;
 import alex.lib.Helper;
-import alex.repository.GoodsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -12,26 +9,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component("GoodsCache")
 public class GoodsCache {
     /* 推荐商品,long:类别ID, Map<String, Object>  */
     private static List<Map<String, Object>> recommend;
 
-    private static Map<Long, GoodsEntity> rows;
-    private static GoodsRepository goodsRepository;
-
-
-    public static Map<Long, GoodsEntity> getRows() {
-        return rows;
-    }
-
     @PostConstruct
     public static synchronized void init() {
-        Map<Long, GoodsEntity> map = new ConcurrentHashMap<>();
-        goodsRepository.findAll().forEach(goodsEntity -> map.put(goodsEntity.getId(), goodsEntity));
-        rows = map;
         updateRecommend();
     }
 
@@ -81,11 +66,5 @@ public class GoodsCache {
                 });
         recommend = recommend1;
     }
-
-    @Autowired
-    private void setGoodsRepository(GoodsRepository goodsRepository) {
-        GoodsCache.goodsRepository = goodsRepository;
-    }
-
 
 }

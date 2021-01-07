@@ -11,8 +11,13 @@ public interface GoodsSpecRepository extends JpaRepository<GoodsSpecEntity, Long
 
     long deleteByGoodsIdAndIdNotIn(long goodsId, Collection<Long> notIn);
 
+    List<GoodsSpecEntity> findByGoodsId(long goodsId);
+
     @Query(value = "select * from goodsSpec where goodsId = ? order by idx for update", nativeQuery = true)
     List<GoodsSpecEntity> findAllByGoodsIdForUpdate(long goodsId);
 
     List<GoodsSpecEntity> findAllByGoodsIdOrderByIdxAsc(long goodsId);
+
+    @Query(value = "select * from goodsSpec where id = ? for update", nativeQuery = true)
+    GoodsSpecEntity findByIdForUpdate(long id);
 }

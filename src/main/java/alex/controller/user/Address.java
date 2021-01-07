@@ -49,12 +49,12 @@ public class Address {
         }
         JsonResult jsonResult = new JsonResult();
         long id = Helper.longValue(request.getParameter("id"));
-        String name = request.getParameter("name");
-        if (name == null || name.trim().length() == 0) {
+        String consignee = request.getParameter("consignee");
+        if (consignee == null || consignee.trim().length() == 0) {
             jsonResult.setMsg("收货人姓名不得为空");
             return jsonResult.toString();
         }
-        name = name.trim();
+        consignee = consignee.trim();
         String phone = request.getParameter("phone");
         String msg = Validate.notEmpty(phone, "联系电话");
         if (msg != null) {
@@ -95,7 +95,7 @@ public class Address {
             userAddressEntity.setUserId(userToken.getId());
         }
         userAddressEntity.setAddress(address);
-        userAddressEntity.setName(name);
+        userAddressEntity.setConsignee(consignee);
         userAddressEntity.setPhone(phone);
         userAddressEntity.setRegion(code);
         if (Helper.longValue(request.getParameter("dft")) > 0) {

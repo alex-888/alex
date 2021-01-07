@@ -1,20 +1,19 @@
 package alex.entity;
 
 import javax.persistence.*;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "orders")
 public class OrderEntity {
-
-
     private Timestamp confirmTime;
+    private String consignee;
     private Timestamp createTime;
     private long id;
     private long no;
     private Timestamp payTime;
     private long payType;
+    private String phone;
     private long price;
     private long region;
     private String remark;
@@ -30,6 +29,14 @@ public class OrderEntity {
 
     public void setConfirmTime(Timestamp confirmTime) {
         this.confirmTime = confirmTime;
+    }
+
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
     }
 
     public Timestamp getCreateTime() {
@@ -74,6 +81,15 @@ public class OrderEntity {
     public void setPayType(long payType) {
         this.payType = payType;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public long getPrice() {
         return price;
     }
@@ -122,12 +138,12 @@ public class OrderEntity {
         this.status = status;
     }
 
-    public void setSource(long source) {
-        this.source = source;
-    }
-
     public long getSource() {
         return source;
+    }
+
+    public void setSource(long source) {
+        this.source = source;
     }
 
     public long getUserId() {

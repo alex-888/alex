@@ -51,7 +51,7 @@ function renderCartList(param) {
             a.innerText = item.goodsName;
             a.href = "/goods/" + item.goodsId + ".html";
             td.append(a);
-            if (item.specDes != null && item.specDes.length > 0) {
+            if (item.specDes.length > 0) {
                 let span = document.createElement("span");
                 span.classList.add("specDes");
                 span.innerText = item.specDes;

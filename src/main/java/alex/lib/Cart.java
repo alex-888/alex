@@ -4,8 +4,9 @@ import alex.Application;
 import alex.authentication.UserToken;
 import alex.cache.ExpressCache;
 import alex.cache.GoodsCache;
-import alex.cache.GoodsSpecCache;
 import alex.entity.GoodsSpecEntity;
+import alex.repository.GoodsRepository;
+import alex.repository.GoodsSpecRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +24,11 @@ public class Cart {
     private final UserToken userToken;
     private List<Item> items;
 
+    private GoodsRepository goodsRepository;
+    private GoodsSpecRepository goodsSpecRepository;
+
     public Cart(HttpServletRequest request) {
+        init();
         this.request = request;
         String json;
         userToken = (UserToken) request.getAttribute(UserToken.KEY);
@@ -45,6 +50,10 @@ public class Cart {
         if (!check()) {
             save();
         }
+    }
+    private void init() {
+        goodsRepository = Application.getContext().getBean(GoodsRepository.class);
+        goodsSpecRepository = Application.getContext().getBean(GoodsSpecRepository.class);
     }
 
     public void add(long goodsId, long specId, long num) {
@@ -73,7 +82,7 @@ public class Cart {
         int size = items.size();
 
         items.removeIf(item -> {
-            var goodsEntity = GoodsCache.getRows().get(item.getGoodsId());
+            var goodsEntity = goodsRepository.findById(item.goodsId).orElse(null);
             if (goodsEntity == null
                     //商品回收站
                     || (goodsEntity.getStatus() & GoodsStatus.RECYCLE_BIN) > 0
@@ -87,9 +96,10 @@ public class Cart {
             item.setGoodsWeight(goodsEntity.getWeight());
             item.setGoodsPrice(goodsEntity.getPrice());
             if (item.specId == 0) {
+                item.setSpecDes("");
                 return false;
             }
-            var specEntities = GoodsSpecCache.getGoodsSpecEntities(item.getGoodsId());
+            var specEntities = goodsSpecRepository.findByGoodsId(item.getGoodsId());
             if (specEntities == null) {
                 return true;
             }

@@ -2,7 +2,6 @@ package alex.controller;
 
 import alex.authentication.UserToken;
 import alex.cache.GoodsCache;
-import alex.cache.GoodsSpecCache;
 import alex.entity.GoodsEntity;
 import alex.entity.UserAddressEntity;
 import alex.lib.Helper;
@@ -52,8 +51,6 @@ public class Cart {
         long goodsId = Helper.longValue(request.getParameter("gid"));
         long specId = Helper.longValue(request.getParameter("specId"));
         long num = Helper.longValue(request.getParameter("num"));
-        GoodsEntity goodsEntity = GoodsCache.getRows().get(goodsId);
-        var goodsSpecEntities = GoodsSpecCache.getGoodsSpecEntities(goodsId);
         var cart = new alex.lib.Cart(request);
         cart.add(goodsId, specId, num);
         return Helper.msgPage("已加入购物车", "/cart", request);

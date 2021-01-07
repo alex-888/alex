@@ -28,7 +28,7 @@
             </thead>
             <tr th:each="addr, status : ${addresses}">
                 <td>
-                    [[${addr.name}]]<br>[[${addr.phone}]]<br>&nbsp;
+                    [[${addr.consignee}]]<br>[[${addr.phone}]]<br>&nbsp;
                 </td>
                 <td>
                     [[${#helpers.getRegion(addr.region)}]]

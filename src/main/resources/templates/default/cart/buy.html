@@ -31,7 +31,7 @@
         <div class="row">
             <select class="addrId" name="addrId">
                 <option th:each="addr :${addresses}" th:value="${addr.id}" th:selected="${addr.id == addrId}">
-                    [[${addr.name}]]&nbsp;&nbsp;[[${addr.phone}]]&nbsp;&nbsp;[[${#helpers.getRegion(addr.region)}]]
+                    [[${addr.consignee}]]&nbsp;&nbsp;[[${addr.phone}]]&nbsp;&nbsp;[[${#helpers.getRegion(addr.region)}]]
                     &nbsp;[[${addr.address}]]
                 </option>
             </select>
@@ -75,7 +75,7 @@
             <b>&nbsp;&nbsp;合计：<span class="price"
                                     th:text="${#helpers.priceFormat(cart.sumPrice() + shippingFee)}"></span></b><br>
             收货地址:&nbsp;<span th:if="${address != null}" th:object="${address}">
-          [[*{name}]]&nbsp;&nbsp;[[*{phone}]]&nbsp;&nbsp;[[*{#helpers.getRegion(region)}]]
+          [[*{consignee}]]&nbsp;&nbsp;[[*{phone}]]&nbsp;&nbsp;[[*{#helpers.getRegion(region)}]]
                 &nbsp;[[*{address}]]
     </span>
 

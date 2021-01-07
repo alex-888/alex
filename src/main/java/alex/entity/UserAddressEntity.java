@@ -10,9 +10,11 @@ import javax.persistence.Table;
 @Table(name = "userAddress")
 public class UserAddressEntity {
     private String address;
+    // 默认地址
     private long dft;
     private long id;
-    private String name;
+    // 收货人
+    private String consignee;
     private String phone;
     private long region;
 
@@ -45,12 +47,12 @@ public class UserAddressEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getConsignee() {
+        return consignee;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
     }
 
     public String getPhone() {

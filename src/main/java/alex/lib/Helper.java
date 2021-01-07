@@ -42,7 +42,7 @@ public class Helper {
     }
 
     /**
-     * date format 'yyyy-MM-dd HH:mmm:ss'
+     * date format 'yyyy-MM-dd HH:mm:ss'
      *
      * @param date
      * @return

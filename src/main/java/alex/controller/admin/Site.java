@@ -18,7 +18,7 @@ import java.math.BigInteger;
 
 
 @Controller(value = "admin/site")
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "admin")
 public class Site {
 
     @GetMapping(value = "")
