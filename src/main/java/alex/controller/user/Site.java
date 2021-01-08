@@ -31,6 +31,7 @@ public class Site {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
         ModelAndView modelAndView = Helper.newModelAndView("user/central", request);
         UserEntity userEntity = userRepository.findById(userToken.getId()).orElse(null);
+        modelAndView.addObject("title", "用户中心");
         modelAndView.addObject("userEntity", userEntity);
         return modelAndView;
     }
@@ -40,20 +41,12 @@ public class Site {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
         ModelAndView modelAndView = Helper.newModelAndView("user/info", request);
         UserEntity userEntity = userRepository.findById(userToken.getId()).orElse(null);
+        modelAndView.addObject("title", "个人信息");
         modelAndView.addObject("userEntity", userEntity);
         return modelAndView;
     }
 
-    @GetMapping(path = "login")
-    public ModelAndView getLogin(HttpServletRequest request) {
-        if (request.getParameter("logout") != null) {
-            Helper.flushSession(request.getSession(false));
-            request.removeAttribute(UserToken.KEY);
-        }
-        ModelAndView modelAndView = Helper.newModelAndView("user/login", request);
-        modelAndView.addObject("back", request.getParameter("back"));
-        return modelAndView;
-    }
+
 
     @PostMapping(path = "info", produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -81,6 +74,17 @@ public class Site {
             }
         }
         return jsonResult.toString();
+    }
+
+    @GetMapping(path = "login")
+    public ModelAndView getLogin(HttpServletRequest request) {
+        if (request.getParameter("logout") != null) {
+            Helper.flushSession(request.getSession(false));
+            request.removeAttribute(UserToken.KEY);
+        }
+        ModelAndView modelAndView = Helper.newModelAndView("user/login", request);
+        modelAndView.addObject("back", request.getParameter("back"));
+        return modelAndView;
     }
 
     @PostMapping(path = "login", produces = "application/json;charset=UTF-8")
@@ -122,7 +126,9 @@ public class Site {
 
     @GetMapping(path = "password")
     public ModelAndView getPassword(HttpServletRequest request) {
-        return Helper.newModelAndView("user/password", request);
+        ModelAndView modelAndView =Helper.newModelAndView("user/password", request);
+        modelAndView.addObject("title", "修改密码");
+        return modelAndView;
     }
 
     @PostMapping(path = "password", produces = "application/json;charset=UTF-8")

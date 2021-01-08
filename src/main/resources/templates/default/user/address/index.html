@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="__${theme}__/components::head(~{::title},~{::link},~{})">
-    <title th:text="用户中心- + ${siteName}"/>
+    <title th:text="${siteName + '-' + title}"></title>
     <link rel="stylesheet" th:href="${#helpers.retouch('/theme/' + theme + '/user.css')}">
 </head>
 <body>
@@ -11,7 +11,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">首页</a></li>
-                <li class="breadcrumb-item active" aria-current="page">用户中心</li>
+                <li class="breadcrumb-item"><a href="/user/central">用户中心</a></li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${title}"></li>
             </ol>
         </nav>
     </div>

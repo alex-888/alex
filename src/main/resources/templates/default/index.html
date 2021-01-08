@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="__${theme}__/components::head(~{::title},~{}, ~{})">
-    <title th:text="${siteName}"/>
+<head th:replace="__${theme}__/components::head(~{::title},~{}, ~{::style})">
+    <title th:text="${siteName}"></title>
+    <style>
+        #headerMenuItems {
+            display: block
+        }
+    </style>
 </head>
 <body>
-<header th:replace="__${theme}__/components::header"/>
-<style>
-    #headerMenuItems {
-        display: block
-    }
-</style>
+<header th:replace="__${theme}__/components::header"></header>
+
 <div class="container">
     <div style="background: #f9f2f4;width:218px;float: left">category
     </div>

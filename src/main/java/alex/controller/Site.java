@@ -124,6 +124,7 @@ public class Site {
         modelAndView.addObject("sort", sort);
         modelAndView.addObject("categoryPath", CategoryCache.getCategoryPath(cid));
         modelAndView.addObject("pagination", pagination);
+        modelAndView.addObject("title", "商品列表");
         return modelAndView;
     }
 

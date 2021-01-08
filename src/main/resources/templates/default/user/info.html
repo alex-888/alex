@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="__${theme}__/components::head(~{::title},~{::link},~{::style})">
-    <title th:text="个人资料- + ${siteName}"/>
+    <title th:text="${siteName + '-' + title}"></title>
     <link rel="stylesheet" th:href="${#helpers.retouch('/theme/' + theme + '/user.css')}">
     <style>
         .infoForm {

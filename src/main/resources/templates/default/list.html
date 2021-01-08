@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="__${theme}__/components::head(~{::title},~{}, ~{})">
-    <title th:text="${siteName}"/>
+    <title th:text="${siteName + '-' + title}"></title>
 </head>
 <body>
-<header th:replace="__${theme}__/components::header"/>
+<header th:replace="__${theme}__/components::header"></header>
 
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -47,8 +47,8 @@
 
 </div>
 <div class="container">
-    <nav th:utext="${pagination.generateWebPagination()}"/>
+    <nav th:utext="${pagination.generateWebPagination()}"></nav>
 </div>
-<footer th:replace="__${theme}__/components::footer"/>
+<footer th:replace="__${theme}__/components::footer"></footer>
 </body>
 </html>

@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="__${theme}__/components::head(~{::title},~{::link},~{::style})">
+<head th:replace="__${theme}__/components::head(~{::title},~{::link},~{})">
     <title th:text="${siteName + '-' + title}"></title>
     <link rel="stylesheet" th:href="${#helpers.retouch('/theme/' + theme + '/user.css')}">
-    <style>
-        .passwordForm {
-            padding-top: 8%;
-            padding-left: 30%;
-        }
-    </style>
 </head>
 <body>
 <div th:replace="__${theme}__/components::header"></div>
@@ -23,27 +17,16 @@
         </nav>
     </div>
     <div th:replace="__${theme}__/user/components::menu"></div>
-    <div class="col-8">
-        <form class="passwordForm" method="post">
-            <ul>
-                <li id="formError"></li>
-                <li>
-                    原密码：<input type="password" name="oldPassword"><br>
-                </li>
-                <li>
-                    新密码：<input type="password" name="password"><br>
-                </li>
-                <li>
-                    重复新密码：<input type="password" name="password1"><br>
-                </li>
-                <li>
-                    <input type="submit" value="确定">
-                </li>
-            </ul>
-        </form>
-    </div>
 
+    <div class="col-10">
+        <div class="row" th:each="order,iter : ${pagination.rows}">
+            <div class="col-2" th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+            <div class="col-2" th:text="${order.no}"></div>
+        </div>
+        <nav th:utext="${pagination.generateWebPagination()}"></nav>
+    </div>
 </div>
+
 <footer th:replace="__${theme}__/components::footer"/>
 </body>
 </html>

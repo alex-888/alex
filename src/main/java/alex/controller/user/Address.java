@@ -36,6 +36,7 @@ public class Address {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
         ModelAndView modelAndView = Helper.newModelAndView("user/address/index", request);
         modelAndView.addObject("addresses", userAddressRepository.findAllByUserId(userToken.getId()));
+        modelAndView.addObject("title", "收货地址");
         return modelAndView;
     }
 

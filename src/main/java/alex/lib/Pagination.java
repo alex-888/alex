@@ -19,13 +19,13 @@ public class Pagination {
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
     private static final Pattern patternOrderBy = Pattern.compile("(\\sorder\\s+by\\s+.+)$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE);
-    private long currentPage = 1;
     private final long pageSize;
     private final Object[] params;
-    private List<Map<String, Object>> rows;
-    private String sql;
-    private long pageCount = 10;
+    private final String sql;
     private final List<Map<String, Object>> pages = new LinkedList<>();
+    private long currentPage = 1;
+    private List<Map<String, Object>> rows;
+    private long pageCount = 10;
     /**
      * http get method query
      */
@@ -98,6 +98,7 @@ public class Pagination {
             return null;
         }
     }
+
     public List<Map<String, Object>> getRows() {
         return rows;
     }

@@ -12,6 +12,7 @@
     <thead>
     <tr>
         <th>订单号</th>
+        <th>用户</th>
         <th>金额</th>
         <th>收货人</th>
         <th>支付状态</th>
@@ -23,6 +24,7 @@
     <tbody>
     <tr th:each="item : ${pagination.rows}">
         <td th:text="${item.no}"></td>
+        <td th:text="${item.userId}"></td>
         <td th:text="${#helpers.priceFormat(item.price)}"></td>
         <td th:text="${item.consignee}"></td>
         <td th:text="${item.consignee}"></td>
