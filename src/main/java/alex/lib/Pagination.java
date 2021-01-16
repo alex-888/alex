@@ -25,7 +25,6 @@ public class Pagination {
     private final List<Map<String, Object>> pages = new LinkedList<>();
     private long currentPage = 1;
     private List<Map<String, Object>> rows;
-    private long pageCount = 10;
     /**
      * http get method query
      */
@@ -73,7 +72,8 @@ public class Pagination {
         if (pageOffset < 0) {
             pageOffset = 0L;
         }
-        for (long l = pageOffset; l < pageOffset + pageCount && l < totalPages; ) {
+        // 页数范围10
+        for (long l = pageOffset; l < pageOffset + 10 && l < totalPages; ) {
             l++;
             Map<String, Object> map = new HashMap<>();
             map.put("num", l);

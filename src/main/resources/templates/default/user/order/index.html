@@ -22,7 +22,10 @@
         <div class="row" th:each="order,iter : ${pagination.rows}">
             <div class="col-2" th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
             <div class="col-2" th:text="${order.no}"></div>
+            <p th:each="goods : ${order.goodsList}" th:text="${goods.goodsName}"></p>
         </div>
+
+
         <nav th:utext="${pagination.generateWebPagination()}"></nav>
     </div>
 </div>
