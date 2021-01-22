@@ -9,7 +9,9 @@ import alex.repository.GoodsRepository;
 import alex.repository.GoodsSpecRepository;
 import alex.repository.UserAddressRepository;
 import alex.repository.UserRepository;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
@@ -88,7 +90,14 @@ public class OrderService {
                 continue;
             }
             cartItems.add(item);
-            GoodsEntity goodsEntity = goodsRepository.findByIdForUpdate(item.getGoodsId());
+            GoodsEntity goodsEntity = null;
+            try {
+                goodsEntity = goodsRepository.findByIdForUpdate(item.getGoodsId());
+            } catch (CannotAcquireLockException e) {
+                // deal lock
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return orderInfo.setErr("系统繁忙");
+            }
             if (goodsEntity == null
                     || (goodsEntity.getStatus() & GoodsStatus.RECYCLE_BIN) > 0
                     || (goodsEntity.getStatus() & GoodsStatus.ON_SELL) == 0

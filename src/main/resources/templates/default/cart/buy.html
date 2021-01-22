@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns="http://www.w3.org/1999/html">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="__${theme}__/components::head(~{::title},~{::link}, ~{})">
     <title th:text="'结算-' + ${siteName}"/>
     <link rel="stylesheet" th:href="${#helpers.retouch('/theme/' + theme + '/cart.css')}">
@@ -96,7 +96,7 @@
             <div class="row">
                 <div class="col-6">
                     <label>收货人:</label>
-                    <input type="text" name="name">
+                    <input type="text" name="consignee">
                 </div>
                 <div class="col-6">
                     <label>电话:</label>
