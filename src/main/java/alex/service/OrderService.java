@@ -145,6 +145,7 @@ public class OrderService {
             orderGoodsEntity.setOrderId(orderEntity.getId());
             orderGoodsEntity.setGoodsId(item.getGoodsId());
             orderGoodsEntity.setGoodsName(item.getGoodsName());
+            orderGoodsEntity.setNum(item.getNum());
             orderGoodsEntity.setSpecId(item.getSpecId());
             orderGoodsEntity.setSpecDes(item.getSpecDes());
             orderGoodsEntity.setPrice(item.getGoodsPrice());

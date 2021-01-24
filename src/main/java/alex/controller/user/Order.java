@@ -1,7 +1,6 @@
 package alex.controller.user;
 
 import alex.authentication.UserToken;
-import alex.entity.OrderGoodsEntity;
 import alex.lib.Helper;
 import alex.lib.Pagination;
 import alex.repository.OrderGoodsRepository;
@@ -12,8 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
-import java.util.List;
 
 @Controller
 @RequestMapping(path = "user/order")

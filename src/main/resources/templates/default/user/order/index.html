@@ -19,11 +19,20 @@
     <div th:replace="__${theme}__/user/components::menu"></div>
 
     <div class="col-10">
-        <div class="row" th:each="order,iter : ${pagination.rows}">
-            <div class="col-2" th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
-            <div class="col-2" th:text="${order.no}"></div>
-            <p th:each="goods : ${order.goodsList}" th:text="${goods.goodsName}"></p>
-        </div>
+        <table th:each="order,iter : ${pagination.rows}">
+            <tr>
+                <th th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></th>
+                <th th:text="${'订单号:' + order.no}"></th>
+                <th colspan="9"></th>
+            </tr>
+            <tr th:each="goods : ${order.goodsList}">
+                <td><a th:href="@{/goods/{id}.html(id=${goods.goodsId})}">
+                    <img th:src="${#helpers.imgZoom(goods.img, 80, 80)}"></a></td>
+                <td><a th:href="@{/goods/{id}.html(id=${goods.goodsId})}" th:text="${goods.goodsName}"></a></td>
+                <td class="price" th:text="${#helpers.priceFormat(goods.price)}"></td>
+                <td th:text="${goods.num}"></td>
+            </tr>
+        </table>
 
 
         <nav th:utext="${pagination.generateWebPagination()}"></nav>
