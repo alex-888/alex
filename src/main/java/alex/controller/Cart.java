@@ -100,7 +100,7 @@ public class Cart {
      * @param request req
      * @return re
      */
-    @PostMapping(path = "buy", produces = "application/json;charset=UTF-8")
+    @PostMapping(path = "buy", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public String postBuy(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -119,7 +119,7 @@ public class Cart {
         return Helper.msgPage(jsonResult, request);
     }
 
-    @GetMapping(path = "json", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "json", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public String getJson(HttpServletRequest request) {
         long goodsId = Helper.longValue(request.getParameter("goodsId"));
@@ -159,7 +159,7 @@ public class Cart {
         }
 
         for (var item : cart.getItems()) {
-            item.setGoodsImg(HelperUtils.imgZoom(item.getGoodsImg(), imgWidth, imgWidth));
+            item.setGoodsImg(HelperUtils.imgZoom(item.getGoodsImg(), imgWidth));
         }
         ObjectMapper objectMapper = new ObjectMapper();
         try {

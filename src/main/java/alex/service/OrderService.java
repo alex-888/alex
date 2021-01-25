@@ -15,9 +15,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -83,21 +81,32 @@ public class OrderService {
             return orderInfo.setErr("购物车被修改，请重新提交");
         }
         UserEntity userEntity = userRepository.findByIdForUpdate(userId);
-        //购买的商品,完成后从购物车清除
+        //要购买的商品,完成后从购物车清除
         Set<Cart.Item> cartItems = new HashSet<>();
         for (var item : cart.getItems()) {
             if (!item.isSelected()) {
                 continue;
             }
             cartItems.add(item);
-            GoodsEntity goodsEntity = null;
+        }
+        // 优化锁行顺序, 按商品ID排序后顺序锁行
+        List<Long> goodsIds = new ArrayList<>();
+        for (var item : cartItems) {
+            goodsIds.add(item.getGoodsId());
+        }
+        Collections.sort(goodsIds);
+        Map<Long, GoodsEntity> goodsEntityMap = new HashMap<>();
+        for (var goodsId : goodsIds) {
             try {
-                goodsEntity = goodsRepository.findByIdForUpdate(item.getGoodsId());
+                goodsEntityMap.put(goodsId, goodsRepository.findByIdForUpdate(goodsId));
             } catch (CannotAcquireLockException e) {
-                // deal lock
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return orderInfo.setErr("系统繁忙");
             }
+        }
+
+        for (var item : cartItems) {
+            GoodsEntity goodsEntity = goodsEntityMap.get(item.getGoodsId());
             if (goodsEntity == null
                     || (goodsEntity.getStatus() & GoodsStatus.RECYCLE_BIN) > 0
                     || (goodsEntity.getStatus() & GoodsStatus.ON_SELL) == 0
@@ -110,7 +119,13 @@ public class OrderService {
                     return orderInfo.setErr("库存不足:" + goodsEntity.getName());
                 }
             } else {
-                GoodsSpecEntity goodsSpecEntity = goodsSpecRepository.findByIdForUpdate(item.getSpecId());
+                GoodsSpecEntity goodsSpecEntity = null;
+                try {
+                    goodsSpecEntity = goodsSpecRepository.findByIdForUpdate(item.getSpecId());
+                } catch (CannotAcquireLockException e) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return orderInfo.setErr("系统繁忙");
+                }
                 if (goodsSpecEntity == null || goodsSpecEntity.getGoodsId() != item.getGoodsId()) {
                     return orderInfo.setErr("规格数据错误:" + goodsEntity.getName());
                 }

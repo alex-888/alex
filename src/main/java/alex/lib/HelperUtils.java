@@ -1,6 +1,5 @@
 package alex.lib;
 
-import alex.Application;
 import alex.cache.RegionCache;
 import alex.cache.SystemCache;
 
@@ -15,11 +14,24 @@ public class HelperUtils {
     }
 
     /**
+     * 正方形图片缩放
      *
-     * @param url image url
-     * @param width zooming width
+     * @param url   图片地址
+     * @param width 图片宽度
+     * @return 缩放后的地址
+     */
+    public static String imgZoom(String url, long width) {
+        //noinspection SuspiciousNameCombination
+        return imgZoom(url, width, width);
+    }
+
+    /**
+     * 图片缩放
+     *
+     * @param url    image url
+     * @param width  zooming width
      * @param height zooming width
-     * @return
+     * @return 缩放后的地址
      */
     public static String imgZoom(String url, long width, long height) {
         if (url != null) {
@@ -48,6 +60,7 @@ public class HelperUtils {
 
     /**
      * retouch css/js file path
+     *
      * @param path css/js file path
      * @return
      */

@@ -35,7 +35,7 @@
     <div class="goodsItemBg" th:each="goods : ${pagination.rows}">
         <div class="goodsItem">
             <a class="img" th:href="@{/goods/{id}.html(id=${goods.id})}">
-                <img th:src="${#helpers.imgZoom(goods.img, 220, 220)}">
+                <img th:src="${#helpers.imgZoom(goods.img, 220)}">
             </a>
             <div class="price" th:text="${#helpers.priceFormat(goods.price)}"></div>
             <div>

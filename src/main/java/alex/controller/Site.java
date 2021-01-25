@@ -9,6 +9,7 @@ import alex.lib.Captcha;
 import alex.lib.Helper;
 import alex.lib.Pagination;
 import alex.storage.LocalStorage;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -128,7 +129,7 @@ public class Site {
         return modelAndView;
     }
 
-    @GetMapping(path = "region", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "region", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public String getRegion() {
         return RegionCache.getRegionJson();
@@ -181,14 +182,14 @@ public class Site {
         return modelAndView;
     }
 
-    @GetMapping(value = "/upload", produces = "text/html;charset=UTF-8")
+    @GetMapping(value = "/upload", produces = "text/html; charset=UTF-8")
     @ResponseBody
     public String getUpload(HttpServletRequest request) {
         System.out.println(Arrays.toString(request.getParameterValues("abc")));
         return "";
     }
 
-    @PostMapping(value = "/upload", produces = "text/html;charset=UTF-8")
+    @PostMapping(value = "/upload", produces = "text/html; charset=UTF-8")
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {

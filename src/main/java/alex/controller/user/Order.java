@@ -24,7 +24,7 @@ public class Order {
         long page = Helper.longValue(request.getParameter("page"));
         ModelAndView modelAndView = Helper.newModelAndView("user/order/index", request);
         var sql = String.format("select * from orders where userId = %d order by id desc", userToken.getId());
-        Pagination pagination = new Pagination(sql, page);
+        Pagination pagination = new Pagination(sql, null, 15, page, null);
         for (var row : pagination.getRows()) {
             row.put("goodsList", orderGoodsRepository.findAllByOrderId(Helper.longValue(row.get("id"))));
         }
