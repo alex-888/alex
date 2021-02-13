@@ -10,12 +10,17 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +33,8 @@ public class Application {
     private static String appDir;
     private static ConfigurableApplicationContext context;
     private static JdbcTemplate jdbcTemplate;
+    // 404错误默认内容
+    private static String notFoundContent;
     private static AtomicLong orderId;
     private static StringRedisTemplate redisTemplate;
     private static String redisSessionNamespace;
@@ -49,6 +56,19 @@ public class Application {
         Application.jdbcTemplate = jdbcTemplate;
         var id = jdbcTemplate.queryForList("SELECT MAX(id) as id FROM orders").get(0).get("id");
         Application.orderId = id == null ? new AtomicLong(0L) : new AtomicLong(Helper.longValue(id));
+
+        // init notFoundContent
+        try {
+            ClassPathResource resource = new ClassPathResource("/static/error/404.html");
+            notFoundContent = new String(resource.getInputStream().readAllBytes()).intern();
+        } catch (IOException e) {
+            e.printStackTrace();
+            notFoundContent = "404 File Not Found";
+        }
+    }
+
+    public static String getNotFoundContent() {
+        return notFoundContent;
     }
 
     public static StringRedisTemplate getRedisTemplate() {
@@ -103,6 +123,7 @@ public class Application {
         } else {
             appDir = System.getProperty("user.dir") + File.separator;
         }
+        appDir = appDir.intern();
     }
 
     @Autowired
@@ -114,5 +135,18 @@ public class Application {
         Runtime.getRuntime().addShutdownHook(new ShutdownThread());
         ScheduledTasks scheduledTasks = context.getBean(ScheduledTasks.class);
         scheduledTasks.cleanTemplateFiles();
+    }
+
+    /**
+     * 注册TaskScheduler
+     *
+     * @return taskScheduler
+     */
+    @Bean
+    TaskScheduler scheduledExecutorService() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setPoolSize(4);
+        scheduler.setThreadNamePrefix("scheduled-thread-");
+        return scheduler;
     }
 }

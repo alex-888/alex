@@ -3,10 +3,11 @@ application:
   key: key
 logging:
   file:
-    name: run.log
+    name: log/run.log
   logback:
     rollingpolicy:
       clean-history-on-start: true
+      max-history: 31
 
 server:
   address: 0.0.0.0
@@ -16,7 +17,7 @@ server:
   tomcat:
     accesslog:
       enabled: true
-      max-days: 30
+      max-days: 31
       pattern: '%a | "%{x-forwarded-for}i" | %t |  "%r" | %D | %s | %B | "%{referer}i" | "%{user-agent}i" | "%{content-type}i"'
     basedir: ./
     max-swallow-size: -1

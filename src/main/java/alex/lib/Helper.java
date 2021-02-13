@@ -25,6 +25,13 @@ import java.util.*;
  */
 public class Helper {
 
+    // 移动端判别条件
+    private final static String[] mobileParam = {
+            " (iPhone; CPU ",
+            " (iPad; CPU ",
+            " Android "
+    };
+
     public static BigDecimal bigDecimalValue(String str) {
         try {
             return new BigDecimal(str);
@@ -139,11 +146,7 @@ public class Helper {
      */
     public static boolean isMobileRequest(HttpServletRequest request) {
         String userAgent = request.getHeader("user-agent");
-        String[] mobileParam = {
-                " (iPhone; CPU ",
-                " (iPad; CPU ",
-                " Android "
-        };
+
         if (userAgent != null) {
             for (String s : mobileParam) {
                 if (userAgent.contains(s)) {

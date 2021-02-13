@@ -9,6 +9,7 @@ import alex.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,13 @@ import java.util.Map;
 @RequestMapping(path = "/api")
 public class Api {
 
-    @PostMapping(path = "login", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getError() {
+        Application.getJdbcTemplate().execute("select now11()");
+        return Helper.getJson("");
+    }
+
+    @PostMapping(path = "login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postLogin(
             String name,
@@ -33,7 +40,7 @@ public class Api {
         return apiJsonResult.toString();
     }
 
-    @GetMapping(path = "/info", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getInfo() {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> map = new HashMap<>();
@@ -52,14 +59,14 @@ public class Api {
 
     }
 
-    @GetMapping(path = "/now", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/now", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getNow() {
         Map<String, Object> map = new HashMap<>();
         map.put("now", new Date().toString());
         return Helper.getJson(map);
     }
 
-    @GetMapping(path = "/session", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/session", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -75,14 +82,14 @@ public class Api {
         return Helper.getJson(map);
     }
 
-    @GetMapping(path = "/test", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getTest(HttpServletRequest request) {
         request.getRequestURI();
         return null;
     }
     //Principal
 
-    @GetMapping(path = "/user", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getUser() {
         UserService userService = Application.getContext().getBean(UserService.class);
         for (int i = 101; i< 1000; i++) {
