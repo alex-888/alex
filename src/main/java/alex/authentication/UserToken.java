@@ -3,6 +3,7 @@ package alex.authentication;
 import alex.Application;
 import alex.entity.UserEntity;
 import alex.lib.Helper;
+import alex.lib.session.Session;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.internal.util.SerializationHelper;
@@ -15,8 +16,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class UserToken extends Token {
-
-    public final static String KEY = "userToken";
+    public final static String NAME = "userToken";
     public final static String REDIS_USER_PREFIX = "user:";
 
     public UserToken() {
@@ -36,12 +36,12 @@ public class UserToken extends Token {
      * @param session user session
      * @return user token
      */
-    public static UserToken from(HttpSession session) {
-        if (session == null) {
+    public static UserToken from(Session session) {
+        if (session == null || session.getId(false) == null) {
             return null;
         }
-        String redisKey = Application.getRedisSessionNamespace() + "sessions:" + session.getId();
-        Object obj = session.getAttribute(KEY);
+        String redisKey = Session.REDIS_PREFIX + session.getId(false);
+        Object obj = session.get(UserToken.NAME);
         if (obj instanceof String) {
             UserToken userToken = UserToken.from((String) obj);
             if (userToken == null) {
@@ -49,7 +49,7 @@ public class UserToken extends Token {
             }
             Boolean exists = Application.getRedisTemplate().opsForSet().isMember(REDIS_USER_PREFIX + userToken.getId(), redisKey);
             if (exists == null || !exists) {
-                Helper.flushSession(session);
+                session.destroy();
                 return null;
             }
             return userToken;
@@ -83,9 +83,9 @@ public class UserToken extends Token {
      *
      * @param session http session
      */
-    public void save(HttpSession session) {
-        String redisKey = Application.getRedisSessionNamespace() + "sessions:" + session.getId();
-        session.setAttribute(KEY, toString());
+    public void save(Session session) {
+        String redisKey = Session.REDIS_PREFIX + session.getId(true);
+        session.set(UserToken.NAME, toString());
         Application.getRedisTemplate().opsForSet().add(REDIS_USER_PREFIX + getId(), redisKey);
         updateRedis(redisKey);
     }
@@ -117,7 +117,7 @@ public class UserToken extends Token {
             RedisConnection redisConnection = Objects.requireNonNull(Application.getRedisTemplate().getConnectionFactory()).getConnection();
             try {
 
-                byte[] objectData = redisConnection.hGet(redisKey.getBytes(), ("sessionAttr:" + KEY).getBytes());
+                byte[] objectData = redisConnection.hGet(redisKey.getBytes(), (UserToken.NAME).getBytes());
                 assert objectData != null;
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(objectData);
                 ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
@@ -139,7 +139,7 @@ public class UserToken extends Token {
                     userToken.setAvatar(getAvatar());
                     userToken.setLevel(getLevel());
                     userToken.setPhone(getPhone());
-                    redisConnection.hSet(redisKey.getBytes(), ("sessionAttr:" + KEY).getBytes(), SerializationHelper.serialize(userToken.toString()));
+                    redisConnection.hSet(redisKey.getBytes(), (UserToken.NAME).getBytes(), SerializationHelper.serialize(userToken.toString()));
                 }
             } else {
                 deleteToken(getId(), redisKey);

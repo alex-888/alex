@@ -1,8 +1,9 @@
 package alex.authentication;
 
-import alex.Application;
 import alex.cache.CategoryCache;
 import alex.cache.SystemCache;
+import alex.lib.session.ApiSession;
+import alex.lib.session.Session;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -10,8 +11,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 @Aspect
@@ -24,12 +23,14 @@ public class GlobalAuth extends Auth {
 
     @Before("pointcut()")
     public void auth(JoinPoint joinPoint) {
-        HttpServletRequest request = getRequest();
+        var request = getRequest();
         String uri = request.getRequestURI();
         if (uri.startsWith("/api/")) {
-            request.setAttribute(UserToken.KEY, UserToken.from("token"));
+            new ApiSession(request);
+            request.setAttribute(UserToken.NAME, UserToken.from("token"));
         } else {
-            request.setAttribute(UserToken.KEY, UserToken.from(getRequest().getSession(false)));
+            Session session = new Session(request, getResponse());
+            request.setAttribute(UserToken.NAME, UserToken.from(session));
         }
         request.setAttribute("beian", SystemCache.getBeian());
         request.setAttribute("siteName", SystemCache.getName());

@@ -1,5 +1,7 @@
 package alex.lib;
 
+import alex.lib.session.Session;
+
 import javax.servlet.http.HttpSession;
 import java.util.regex.Pattern;
 
@@ -19,9 +21,9 @@ public class Validate {
         return null;
     }
 
-    public static String captcha(String captcha, HttpSession session, String alias) {
+    public static String captcha(String captcha, Session session, String alias) {
         if (captcha != null && session != null) {
-            String val = (String) session.getAttribute(Captcha.SESSION_NAME);
+            String val = (String) session.get(Captcha.class.getSimpleName());
             if (captcha.equals(val)) {
                 return null;
             }

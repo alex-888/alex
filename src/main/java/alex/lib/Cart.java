@@ -3,7 +3,6 @@ package alex.lib;
 import alex.Application;
 import alex.authentication.UserToken;
 import alex.cache.ExpressCache;
-import alex.cache.GoodsCache;
 import alex.entity.GoodsSpecEntity;
 import alex.repository.GoodsRepository;
 import alex.repository.GoodsSpecRepository;
@@ -31,7 +30,7 @@ public class Cart {
         init();
         this.request = request;
         String json;
-        userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        userToken = (UserToken) request.getAttribute(UserToken.NAME);
         if (userToken == null) {
             json = (String) request.getSession().getAttribute(KEY);
         } else {

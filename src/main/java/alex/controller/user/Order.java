@@ -20,7 +20,7 @@ public class Order {
 
     @GetMapping(path = "")
     public ModelAndView getIndex(HttpServletRequest request) {
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         long page = Helper.longValue(request.getParameter("page"));
         ModelAndView modelAndView = Helper.newModelAndView("user/order/index", request);
         var sql = String.format("select * from orders where userId = %d order by id desc", userToken.getId());

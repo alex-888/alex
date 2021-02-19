@@ -1,26 +1,26 @@
 package alex.lib;
 
 
-import javax.servlet.http.HttpSession;
+import alex.lib.session.Session;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public class Captcha {
-    public final static String SESSION_NAME="captcha";
+    // 验证码长度
+    public final static long SIZE = 4;
     private static final char[] mapTable = {
             '0', '1', '2', '3', '4', '5',
             '6', '7', '8', '9', '0', '1',
             '2', '3', '4', '5', '6', '7',
             '8', '9'};
 
-    public static void clear(HttpSession session) {
+    public static void clear(Session session) {
         if (session == null) {
             return;
         }
-        session.removeAttribute(SESSION_NAME);
+        session.delete(Captcha.class.getSimpleName());
     }
 
     public static CaptchaResult getImageCode() {
@@ -47,7 +47,7 @@ public class Captcha {
         //取随机产生的码
         StringBuilder phrase = new StringBuilder();
         //4代表4位验证码,如果要生成更多位的认证码,则加大数值
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < Captcha.SIZE; ++i) {
             phrase.append(mapTable[(int) (mapTable.length * Math.random())]);
             // 将认证码显示到图象中
             g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
@@ -71,10 +71,12 @@ public class Captcha {
         int b = fc + random.nextInt(bc - fc);
         return new Color(r, g, b);
     }
+
     public static class CaptchaResult {
 
         private final BufferedImage image;
         private final String phrase;
+
         public CaptchaResult(BufferedImage image, String phrase) {
             this.image = image;
             this.phrase = phrase;

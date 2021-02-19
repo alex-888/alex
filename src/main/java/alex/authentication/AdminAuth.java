@@ -26,13 +26,13 @@ public class AdminAuth extends Auth {
     @Before("pointcut()")
     public void auth(JoinPoint joinPoint) throws AdminAuthException, UserAuthException {
         HttpServletRequest request = getRequest();
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         if (userToken == null) {
             throw new UserAuthException();
         }
         var adminUserEntity = adminUserRepository.findById(userToken.getId()).orElse(null);
         if (adminUserEntity == null) {
-            throw new AdminAuthException();
+            throw new AdminAuthException(false);
         }
         AdminAuthority adminAuthority = new AdminAuthority(adminUserEntity.getRoleId());
         String curAction = request.getMethod().toLowerCase() + '@' + request.getRequestURI();
@@ -40,7 +40,7 @@ public class AdminAuth extends Auth {
                 && !curAction.equals("get@/admin/msg")
                 && !curAction.equals("get@/admin")
                 && !curAction.equals("get@/admin/")) {
-            throw new AdminAuthException();
+            throw new AdminAuthException(true);
         }
         AdminMenu adminMenu = new AdminMenu(adminAuthority.actions);
         request.setAttribute("adminMenu", adminMenu.menu);

@@ -33,7 +33,7 @@ public class Address {
 
     @GetMapping(path = "")
     public ModelAndView getIndex(HttpServletRequest request) {
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         ModelAndView modelAndView = Helper.newModelAndView("user/address/index", request);
         modelAndView.addObject("addresses", userAddressRepository.findAllByUserId(userToken.getId()));
         modelAndView.addObject("title", "收货地址");
@@ -43,7 +43,7 @@ public class Address {
     @PostMapping(path = "", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String postIndex(HttpServletRequest request) {
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         String back = request.getParameter("back");
         if (back == null) {
             back = "/user/address";
@@ -122,7 +122,7 @@ public class Address {
     @GetMapping(path = "delete", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String getDelete(HttpServletRequest request) {
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         long id = Helper.longValue(request.getParameter("id"));
         UserAddressEntity addressEntity = userAddressRepository.findByIdAndUserId(id, userToken.getId());
         if (addressEntity == null || addressEntity.getUserId() != userToken.getId()) {
@@ -135,7 +135,7 @@ public class Address {
     @GetMapping(path = "json", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String getJson(HttpServletRequest request) {
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         long id = Helper.longValue(request.getParameter("id"));
         UserAddressEntity addressEntity = userAddressRepository.findByIdAndUserId(id, userToken.getId());
         if (addressEntity == null || addressEntity.getUserId() != userToken.getId()) {
@@ -153,7 +153,7 @@ public class Address {
     @GetMapping(path = "setDft", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public String getSetDft(HttpServletRequest request) {
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         long id = Helper.longValue(request.getParameter("id"));
         UserAddressEntity addressEntity = userAddressRepository.findByIdAndUserId(id, userToken.getId());
         if (addressEntity == null || addressEntity.getUserId() != userToken.getId()) {

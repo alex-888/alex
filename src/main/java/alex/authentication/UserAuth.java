@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Aspect
 @Component
@@ -26,7 +25,7 @@ public class UserAuth extends Auth {
         }
         uri = uri.substring(6);
         if (uri.equals("buy")) {
-            if (request.getAttribute(UserToken.KEY) == null) {
+            if (request.getAttribute(UserToken.NAME) == null) {
                 throw new UserAuthException();
             }
         }
@@ -45,7 +44,7 @@ public class UserAuth extends Auth {
         if (uri.equals("login") || uri.equals("register")) {
             return;
         }
-        if (request.getAttribute(UserToken.KEY) == null) {
+        if (request.getAttribute(UserToken.NAME) == null) {
             throw new UserAuthException();
         }
     }

@@ -1,11 +1,13 @@
 package alex.lib;
 
+import alex.config.AppProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -25,6 +27,9 @@ import static alex.lib.Helper.bytesToHex;
 
 @Component("Crypto")
 public class Crypto {
+
+    @Resource
+    private AppProperties appProperties;
     private static final Log log = LogFactory.getLog(Crypto.class);
     private static final String KEY_ALGORITHM = "AES";
     // AES加密算法
@@ -132,9 +137,9 @@ public class Crypto {
      */
     @Autowired
     private void initSecretKey(ConfigurableApplicationContext context) {
-        String key = context.getEnvironment().getProperty("application.key");
+        String key = appProperties.getKey();
         if (key == null) {
-            log.warn("need config: application.key");
+            log.warn("need config: app.key");
             key = "";
         }
         KeyGenerator kg = null;

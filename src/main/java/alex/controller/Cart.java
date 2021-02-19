@@ -60,7 +60,7 @@ public class Cart {
         if (cart.sumNum() == 0) {
             return Helper.msgPage("购物车中没有选中的商品", "/cart", request);
         }
-        UserToken userToken = (UserToken) request.getAttribute(UserToken.KEY);
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
         var addresses = userAddressRepository.findAllByUserId(userToken.getId());
         long addrId = Helper.longValue(request.getParameter("addrId"));
         UserAddressEntity address = null;

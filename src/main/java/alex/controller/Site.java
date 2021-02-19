@@ -8,6 +8,7 @@ import alex.entity.GoodsEntity;
 import alex.lib.Captcha;
 import alex.lib.Helper;
 import alex.lib.Pagination;
+import alex.lib.session.Session;
 import alex.storage.LocalStorage;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -36,13 +37,12 @@ public class Site {
     @RequestMapping(value = "captcha")
     @ResponseBody
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Session session = Session.from(request);
         response.setHeader("Cache-Control", "no-store");
         response.setContentType("image/png");
-
         OutputStream os = response.getOutputStream();
-
         var captchaResult = Captcha.getImageCode();
-        request.getSession().setAttribute(Captcha.SESSION_NAME, captchaResult.getPhrase().toLowerCase());
+        session.set(Captcha.class.getSimpleName(), captchaResult.getPhrase().toLowerCase());
         try {
             ImageIO.write(captchaResult.getImage(), "png", os);
         } catch (IOException e) {

@@ -64,21 +64,6 @@ public class Helper {
     }
 
     /**
-     * flush session
-     *
-     * @param session http session
-     */
-    public static void flushSession(HttpSession session) {
-        if (session != null) {
-            Enumeration<String> attributeNames = session.getAttributeNames();
-            while (attributeNames.hasMoreElements()) {
-                String key = attributeNames.nextElement();
-                session.removeAttribute(key);
-            }
-        }
-    }
-
-    /**
      * get client ip from http request
      *
      * @param request client request

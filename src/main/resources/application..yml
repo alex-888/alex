@@ -1,6 +1,5 @@
-application:
-  # 程序密钥
-  key: key
+app:
+  key:
 logging:
   file:
     name: log/run.log
@@ -23,6 +22,12 @@ server:
     max-swallow-size: -1
     remoteip:
       protocol-header: X-Forwarded-Proto
+    threads:
+      min-spare: 20
+  servlet:
+    session:
+      # 留空,禁用跟踪模式
+      tracking-modes:
 
 spring:
   data:
@@ -51,11 +56,11 @@ spring:
     database: 0
     host: 192.168.10.8
     port: 6379
-    password:
+    client-type: lettuce
+    lettuce:
+      pool:
+        min-idle: 5
 
-  session:
-    store-type: redis
-    timeout: 6h
   servlet:
     multipart:
       max-file-size: 50MB

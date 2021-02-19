@@ -3,6 +3,7 @@ package alex;
 import alex.entity.UserEntity;
 import alex.lib.Captcha;
 import alex.lib.Helper;
+import alex.lib.session.Session;
 import alex.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -54,7 +54,7 @@ public class ControllerTest {
                 .param("password", password)
                 .param("password1", password)
                 .param("captcha", "1234")
-                .sessionAttr(Captcha.SESSION_NAME, "1234");
+                .sessionAttr(Captcha.class.getSimpleName(), "1234");
         MvcResult registerResult = mockMvc.perform(requestBuilder).andReturn();
         Assertions.assertEquals(200, registerResult.getResponse().getStatus());
         UserEntity userEntity = userRepository.findByName(name);
@@ -65,11 +65,11 @@ public class ControllerTest {
     @Test
     public void testCaptcha() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/captcha")).andReturn();
-        HttpSession httpSession = mvcResult.getRequest().getSession();
+        Session session = Session.from(mvcResult.getRequest());
+        Assertions.assertNotNull(session);
+        String code = (String) session.get(Captcha.class.getSimpleName());
         MockHttpServletResponse response = mvcResult.getResponse();
-        Assertions.assertNotNull(httpSession);
-        String val = (String) httpSession.getAttribute(Captcha.SESSION_NAME);
-        Assertions.assertEquals(4, val.length());
+        Assertions.assertEquals(Captcha.SIZE, code.length());
         Assertions.assertEquals(200, response.getStatus());
         Assertions.assertTrue(response.getContentAsByteArray().length > 600);
         Assertions.assertEquals("image/png", response.getContentType());
