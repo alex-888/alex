@@ -3,6 +3,8 @@ package alex.lib;
 import alex.Application;
 import alex.authentication.UserToken;
 import alex.cache.ExpressCache;
+import alex.config.AppConfig;
+import alex.config.RedisConfig;
 import alex.entity.GoodsSpecEntity;
 import alex.repository.GoodsRepository;
 import alex.repository.GoodsSpecRepository;
@@ -34,7 +36,7 @@ public class Cart {
         if (userToken == null) {
             json = (String) request.getSession().getAttribute(KEY);
         } else {
-            json = Application.getRedisTemplate().opsForValue().get(KEY + ":" + userToken.getId());
+            json = RedisConfig.getStringRedisTemplate().opsForValue().get(KEY + ":" + userToken.getId());
         }
         if (json == null || json.length() < 10) {
             items = new LinkedList<>();
@@ -51,8 +53,8 @@ public class Cart {
         }
     }
     private void init() {
-        goodsRepository = Application.getContext().getBean(GoodsRepository.class);
-        goodsSpecRepository = Application.getContext().getBean(GoodsSpecRepository.class);
+        goodsRepository = AppConfig.getContext().getBean(GoodsRepository.class);
+        goodsSpecRepository = AppConfig.getContext().getBean(GoodsSpecRepository.class);
     }
 
     public void add(long goodsId, long specId, long num) {
@@ -188,7 +190,7 @@ public class Cart {
             if (userToken == null) {
                 request.getSession().setAttribute(KEY, json);
             } else {
-                Application.getRedisTemplate().opsForValue().set(KEY + ":" + userToken.getId(), json);
+                RedisConfig.getStringRedisTemplate().opsForValue().set(KEY + ":" + userToken.getId(), json);
             }
 
         } catch (JsonProcessingException e) {

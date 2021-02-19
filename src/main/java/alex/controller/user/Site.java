@@ -2,6 +2,7 @@ package alex.controller.user;
 
 import alex.Application;
 import alex.authentication.UserToken;
+import alex.config.AppConfig;
 import alex.entity.UserEntity;
 import alex.lib.Cart;
 import alex.lib.*;
@@ -168,7 +169,7 @@ public class Site {
             }
         }
         if (jsonResult.error.size() == 0) {
-            UserService userService = Application.getContext().getBean(UserService.class);
+            UserService userService = AppConfig.getContext().getBean(UserService.class);
             String salt = userService.editPassword(userToken.getId(), password, Helper.getClientIp(request));
             if (salt != null) {
                 jsonResult.setMsg("修改成功");

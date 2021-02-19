@@ -1,6 +1,7 @@
 package alex.controller.admin;
 
 import alex.Application;
+import alex.config.AppConfig;
 import alex.lib.Crypto;
 import alex.lib.Helper;
 import alex.lib.JsonResult;
@@ -85,7 +86,7 @@ public class Site {
             uri += "/" + file.getOriginalFilename();
         }
 
-        try (Storage storage = Application.getContext().getBean(Storage.class)) {
+        try (Storage storage = AppConfig.getContext().getBean(Storage.class)) {
             UploadResult uploadResult = storage.upload(file.getInputStream(), uri);
             if (uploadResult.getErr() == null) {
                 jsonResult.setUrl(uploadResult.getUrl());

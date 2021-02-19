@@ -1,6 +1,7 @@
 package alex.cache;
 
 import alex.Application;
+import alex.config.AppConfig;
 import alex.lib.Helper;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ public class GoodsCache {
      */
     public synchronized static void updateRecommend() {
         List<Map<String, Object>> recommend1 = new LinkedList<>();
-        Application.getJdbcTemplate().queryForList("select id,name from category where parentId = 0")
+        AppConfig.getJdbcTemplate().queryForList("select id,name from category where parentId = 0")
                 .forEach(m -> {
                     Map<String, Object> map = new HashMap<>();
                     long cateId = Helper.longValue(m.get("id"));
@@ -47,7 +48,7 @@ public class GoodsCache {
 
                     var sql = String.format("select id,imgs,name,price from goods where cateId in (%s) and status & 0b10 > 0 order by recommend desc, updateAt desc limit 16", catIds);
                     List<Map<String, Object>> goodsList = new LinkedList<>();
-                    Application.getJdbcTemplate().queryForList(sql).forEach(m1 -> {
+                    AppConfig.getJdbcTemplate().queryForList(sql).forEach(m1 -> {
                         Map<String, Object> goodsMap = new HashMap<>();
                         goodsMap.put("id", m1.get("id"));
                         goodsMap.put("img", ((String) m1.get("imgs")).split(",")[0]);
@@ -57,7 +58,7 @@ public class GoodsCache {
                     });
 
                     sql = "select id,name from category where parentId = ? order by recommend limit 16";
-                    List<Map<String, Object>> cateList = new LinkedList<>(Application.getJdbcTemplate().queryForList(sql, cateId));
+                    List<Map<String, Object>> cateList = new LinkedList<>(AppConfig.getJdbcTemplate().queryForList(sql, cateId));
                     map.put("id", cateId);
                     map.put("name", m.get("name"));
                     map.put("cateList", cateList);

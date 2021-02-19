@@ -1,6 +1,7 @@
 package alex.service;
 
 import alex.Application;
+import alex.config.AppConfig;
 import alex.entity.UserEntity;
 import alex.lib.Crypto;
 import alex.lib.Database;
@@ -83,7 +84,7 @@ public class UserService {
             return "此用户已被注册1";
         }
         try {
-            Application.getJdbcTemplate().update("insert into users (name, password, salt, registerTime, registerIp) values (?,?,?,now(),?)",
+            AppConfig.getJdbcTemplate().update("insert into users (name, password, salt, registerTime, registerIp) values (?,?,?,now(),?)",
                     name, Crypto.sha3_256(password + salt), salt, registerIp);
         } catch (DuplicateKeyException ex) {
             return "此用户已被注册";

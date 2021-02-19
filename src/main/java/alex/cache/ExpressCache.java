@@ -1,36 +1,31 @@
 package alex.cache;
 
-import alex.Application;
+import alex.config.AppConfig;
 import alex.entity.ExpressCompanyEntity;
 import alex.lib.express.FreeRule;
 import alex.lib.express.PriceRule;
-import alex.lib.express.ProvincePrice;
 import alex.repository.ExpressCompanyRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@DependsOn("AppConfig")
 public class ExpressCache {
     private static List<ExpressCompanyEntity> companies;
     private static ExpressCompanyRepository expressCompanyRepository;
     private static FreeRule freeRule;
     private static PriceRule priceRule;
 
-    @Autowired
-    private void autowire(ExpressCompanyRepository expressCompanyRepository) {
-        ExpressCache.expressCompanyRepository = expressCompanyRepository;
-    }
-
     @PostConstruct
     public static synchronized void init() {
         companies = expressCompanyRepository.findAll();
-        var list = Application.getJdbcTemplate().queryForList("select * from system where entity='shipping'");
+        var list = AppConfig.getJdbcTemplate().queryForList("select * from system where entity='shipping'");
         String json = null;
         ObjectMapper objectMapper = new ObjectMapper();
         for (var map : list) {
@@ -38,7 +33,7 @@ public class ExpressCache {
             if (json.length() < 10) {
                 continue;
             }
-            switch ((String)map.get("attribute")) {
+            switch ((String) map.get("attribute")) {
                 case "freeRule":
                     try {
                         freeRule = objectMapper.readValue(json, FreeRule.class);
@@ -88,6 +83,11 @@ public class ExpressCache {
 
     public static PriceRule getPriceRule() {
         return priceRule;
+    }
+
+    @Autowired
+    private void autowire(ExpressCompanyRepository expressCompanyRepository) {
+        ExpressCache.expressCompanyRepository = expressCompanyRepository;
     }
 
 

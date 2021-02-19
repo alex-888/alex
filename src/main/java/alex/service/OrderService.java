@@ -1,6 +1,7 @@
 package alex.service;
 
 import alex.Application;
+import alex.config.AppConfig;
 import alex.entity.*;
 import alex.lib.Cart;
 import alex.lib.GoodsStatus;
@@ -55,7 +56,7 @@ public class OrderService {
     public void insertOrder(OrderEntity ety) {
         String sql = "insert into orders (createTime, id, no, userId, region, consignee, phone, price, shippingFee,payType,source)"
                 + "values (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Application.getJdbcTemplate().update(sql, ety.getId(), ety.getNo(), ety.getUserId(), ety.getRegion(),
+        AppConfig.getJdbcTemplate().update(sql, ety.getId(), ety.getNo(), ety.getUserId(), ety.getRegion(),
                 ety.getConsignee(), ety.getPhone(), ety.getPrice(), ety.getShippingFee(), ety.getPayType(),
                 ety.getSource());
     }
@@ -136,7 +137,7 @@ public class OrderService {
         }
         // 创建订单信息
         OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setId(Application.getOrderId().incrementAndGet());
+        orderEntity.setId(AppConfig.getOrderId().incrementAndGet());
         orderEntity.setNo(generalOrderNo(orderEntity.getId()));
         orderEntity.setUserId(userId);
         orderEntity.setRegion(addr.getRegion());
@@ -148,11 +149,11 @@ public class OrderService {
         // 扣库存，创建订单商品
         cartItems.forEach(item -> {
             if (item.getSpecId() == 0) {
-                Application.getJdbcTemplate().update(
+                AppConfig.getJdbcTemplate().update(
                         "update goods set stock=stock - ? where id = ?",
                         item.getNum(), item.getGoodsId());
             } else {
-                Application.getJdbcTemplate().update(
+                AppConfig.getJdbcTemplate().update(
                         "update goodsSpec set stock=stock - ? where id = ?",
                         item.getNum(), item.getSpecId());
             }

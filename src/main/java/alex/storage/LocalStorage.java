@@ -1,6 +1,7 @@
 package alex.storage;
 
 import alex.Application;
+import alex.config.AppConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.nio.file.Paths;
 
 public class LocalStorage implements Storage {
 
-    public final static String UPLOAD_DIR = Application.getAppDir() + "img" + File.separator;
+    public final static String UPLOAD_DIR = AppConfig.getAppDir() + "img" + File.separator;
 
 
     @Override

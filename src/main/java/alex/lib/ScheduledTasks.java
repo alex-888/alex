@@ -1,6 +1,7 @@
 package alex.lib;
 
 import alex.Application;
+import alex.config.AppConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,7 +20,7 @@ public class ScheduledTasks {
     @SuppressWarnings("all")
     public void cleanTemplateFiles() {
         long now = Calendar.getInstance().getTimeInMillis();
-        Path path = Paths.get(Application.getAppDir() + "work", "Tomcat", "localhost", "ROOT");
+        Path path = Paths.get(AppConfig.getAppDir() + "work", "Tomcat", "localhost", "ROOT");
         log.info("Clean template directory " + path);
         File file = path.toFile();
         if (file.isDirectory()) {

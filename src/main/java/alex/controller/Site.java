@@ -4,6 +4,7 @@ import alex.Application;
 import alex.cache.CategoryCache;
 import alex.cache.GoodsCache;
 import alex.cache.RegionCache;
+import alex.config.AppConfig;
 import alex.entity.GoodsEntity;
 import alex.lib.Captcha;
 import alex.lib.Helper;
@@ -139,22 +140,22 @@ public class Site {
     @ResponseBody
 
     public String getTest(HttpServletRequest request) {
-        Application.getJdbcTemplate().update("update goods set price = price + 1 where id =4");
-        Application.getJdbcTemplate().update("update goods set price = price + 2 where id =4");
+        AppConfig.getJdbcTemplate().update("update goods set price = price + 1 where id =4");
+        AppConfig.getJdbcTemplate().update("update goods set price = price + 2 where id =4");
         tt();
         return "";
     }
 
     @Transactional
     public void tt() {
-        Application.getJdbcTemplate().update("update goods set price = price + 3 where id =4");
-        Application.getJdbcTemplate().update("update goods set price = price + 4 where id =4");
+        AppConfig.getJdbcTemplate().update("update goods set price = price + 3 where id =4");
+        AppConfig.getJdbcTemplate().update("update goods set price = price + 4 where id =4");
     }
 
     @RequestMapping(value = "test1", method = RequestMethod.GET)
     @ResponseBody
     public String getTest1(Model model, HttpServletRequest request) {
-        TemplateEngine templateEngine = Application.getContext().getBean(TemplateEngine.class);
+        TemplateEngine templateEngine = AppConfig.getContext().getBean(TemplateEngine.class);
         Context context = new Context();
         context.setVariable("error", "msg");
         String html = templateEngine.process("default/error", context);

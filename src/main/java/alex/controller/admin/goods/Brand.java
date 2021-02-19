@@ -2,6 +2,7 @@ package alex.controller.admin.goods;
 
 import alex.Application;
 import alex.cache.BrandCache;
+import alex.config.AppConfig;
 import alex.entity.BrandEntity;
 import alex.lib.AdminHelper;
 import alex.lib.Helper;
@@ -35,7 +36,7 @@ public class Brand {
             jsonResult.setMsg("删除失败,指定的商品品牌不存在");
             return jsonResult.toString();
         }
-        long num = Helper.longValue(Application.getJdbcTemplate().queryForObject("select count(*) from goods where cateId =?",
+        long num = Helper.longValue(AppConfig.getJdbcTemplate().queryForObject("select count(*) from goods where cateId =?",
                 Long.class, id));
         if (num > 0) {
             jsonResult.setMsg("删除失败,该品牌的商品累计个数:" + num);

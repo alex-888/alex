@@ -3,6 +3,7 @@ package alex.controller.admin.sys;
 import alex.Application;
 import alex.cache.ExpressCache;
 import alex.cache.RegionCache;
+import alex.config.AppConfig;
 import alex.entity.ExpressCompanyEntity;
 import alex.lib.AdminHelper;
 import alex.lib.Helper;
@@ -140,7 +141,7 @@ public class Shipping {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writeValueAsString(freeRule);
-            Application.getJdbcTemplate().update("update system set value = ? where entity='shipping' and attribute = 'freeRule'",
+            AppConfig.getJdbcTemplate().update("update system set value = ? where entity='shipping' and attribute = 'freeRule'",
                     json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -230,7 +231,7 @@ public class Shipping {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String json = objectMapper.writeValueAsString(priceRule);
-            Application.getJdbcTemplate().update("update system set value = ? where entity='shipping' and attribute = 'priceRule'",
+            AppConfig.getJdbcTemplate().update("update system set value = ? where entity='shipping' and attribute = 'priceRule'",
                     json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

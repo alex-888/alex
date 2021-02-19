@@ -1,18 +1,11 @@
 package alex.authentication;
 
-import alex.Application;
+import alex.config.RedisConfig;
 import alex.entity.UserEntity;
-import alex.lib.Helper;
 import alex.lib.session.Session;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.internal.util.SerializationHelper;
-import org.springframework.data.redis.connection.RedisConnection;
 
-import javax.servlet.http.HttpSession;
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.util.Objects;
 import java.util.Set;
 
 public class UserToken extends Token {
@@ -28,8 +21,8 @@ public class UserToken extends Token {
 
 
     public static void deleteToken(long uid, String redisKey) {
-        Application.getRedisTemplate().delete(redisKey);
-        Application.getRedisTemplate().opsForSet().remove(REDIS_USER_PREFIX + uid, redisKey);
+        RedisConfig.getStringRedisTemplate().delete(redisKey);
+        RedisConfig.getStringRedisTemplate().opsForSet().remove(REDIS_USER_PREFIX + uid, redisKey);
     }
 
     /**
@@ -47,7 +40,7 @@ public class UserToken extends Token {
             if (userToken == null) {
                 return null;
             }
-            Boolean exists = Application.getRedisTemplate().opsForSet().isMember(REDIS_USER_PREFIX + userToken.getId(), redisKey);
+            Boolean exists = RedisConfig.getStringRedisTemplate().opsForSet().isMember(REDIS_USER_PREFIX + userToken.getId(), redisKey);
             if (exists == null || !exists) {
                 session.destroy();
                 return null;
@@ -81,12 +74,12 @@ public class UserToken extends Token {
     /**
      * save token, for http request
      *
-     * @param session http session
+     * @param session session
      */
     public void save(Session session) {
         String redisKey = Session.REDIS_PREFIX + session.getId(true);
         session.set(UserToken.NAME, toString());
-        Application.getRedisTemplate().opsForSet().add(REDIS_USER_PREFIX + getId(), redisKey);
+        RedisConfig.getStringRedisTemplate().opsForSet().add(REDIS_USER_PREFIX + getId(), redisKey);
         updateRedis(redisKey);
     }
 
@@ -101,28 +94,21 @@ public class UserToken extends Token {
 
     /**
      * update redis data
+     *
+     * @param excludeRedisKey 排除的redis key
      */
     @SuppressWarnings("EmptyCatchBlock")
     private void updateRedis(String excludeRedisKey) {
-        Set<String> set = Application.getRedisTemplate().opsForSet().members(REDIS_USER_PREFIX + getId());
-        if (set == null) {
-            return;
-        }
-
+        Set<String> set = RedisConfig.getStringRedisTemplate().opsForSet().members(REDIS_USER_PREFIX + getId());
+        assert set != null;
         set.forEach(redisKey -> {
             if (redisKey.equals(excludeRedisKey)) {
                 return;
             }
             UserToken userToken = null;
-            RedisConnection redisConnection = Objects.requireNonNull(Application.getRedisTemplate().getConnectionFactory()).getConnection();
-            try {
-
-                byte[] objectData = redisConnection.hGet(redisKey.getBytes(), (UserToken.NAME).getBytes());
-                assert objectData != null;
-                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(objectData);
-                ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-                userToken = UserToken.from((String) objectInputStream.readObject());
-            } catch (Exception e) {
+            Object obj = RedisConfig.getStringObjectRedisTemplate().opsForHash().get(redisKey, UserToken.NAME);
+            if (obj instanceof String) {
+                userToken = UserToken.from((String) obj);
             }
             if (userToken == null) {
                 deleteToken(getId(), redisKey);
@@ -139,7 +125,7 @@ public class UserToken extends Token {
                     userToken.setAvatar(getAvatar());
                     userToken.setLevel(getLevel());
                     userToken.setPhone(getPhone());
-                    redisConnection.hSet(redisKey.getBytes(), (UserToken.NAME).getBytes(), SerializationHelper.serialize(userToken.toString()));
+                    RedisConfig.getStringObjectRedisTemplate().opsForHash().put(redisKey, UserToken.NAME, toString());
                 }
             } else {
                 deleteToken(getId(), redisKey);
@@ -158,7 +144,6 @@ public class UserToken extends Token {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
         return json;
     }
 }

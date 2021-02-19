@@ -1,6 +1,8 @@
 package alex.controller.admin.sys;
 
 import alex.Application;
+import alex.config.AppConfig;
+import alex.config.RedisConfig;
 import alex.lib.Helper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
@@ -52,9 +54,9 @@ public class Info {
         ModelAndView modelAndView = Helper.newModelAndView("admin/sys/info/index", request);
         modelAndView.addObject("title", "系统信息");
         modelAndView.addObject("dbVersion",
-                Application.getJdbcTemplate().queryForObject("select version()", String.class));
+                AppConfig.getJdbcTemplate().queryForObject("select version()", String.class));
         modelAndView.addObject("dbTxIsolation",
-                Application.getJdbcTemplate().queryForObject("SELECT @@tx_isolation", String.class));
+                AppConfig.getJdbcTemplate().queryForObject("SELECT @@tx_isolation", String.class));
 
         modelAndView.addObject("javaOsName", System.getProperty("os.name"));
         modelAndView.addObject("javaOsVersion", System.getProperty("os.version"));
@@ -64,10 +66,10 @@ public class Info {
         modelAndView.addObject("vmInfo", System.getProperty("java.vm.info"));
         modelAndView.addObject("cpuCores", Runtime.getRuntime().availableProcessors());
         modelAndView.addObject("javaGc", gc.toString());
-        modelAndView.addObject("applicationDir", Application.getAppDir());
+        modelAndView.addObject("applicationDir", AppConfig.getAppDir());
         modelAndView.addObject("springBootVersion", SpringApplication.class.getPackage().getImplementationVersion());
 
-        Properties redisProperties = Objects.requireNonNull(Application.getRedisTemplate().getConnectionFactory()).getConnection().serverCommands().info();
+        Properties redisProperties = Objects.requireNonNull(RedisConfig.getStringRedisTemplate().getConnectionFactory()).getConnection().serverCommands().info();
         assert redisProperties != null;
         modelAndView.addObject("redisVersion", redisProperties.getProperty("redis_version"));
 

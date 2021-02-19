@@ -1,6 +1,6 @@
 package alex.lib;
 
-import alex.Application;
+import alex.config.AppConfig;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -109,7 +109,7 @@ public class Pagination {
             startIndex = 0;
         }
         String sql1 = String.format("%s limit %d,%d", sql, startIndex, pageSize);
-        rows = Application.getJdbcTemplate().queryForList(sql1, params);
+        rows = AppConfig.getJdbcTemplate().queryForList(sql1, params);
         endIndex = startIndex + rows.size();
     }
 
@@ -198,7 +198,7 @@ public class Pagination {
             Exception ex = new Exception("sql statement error: " + sql);
             ex.printStackTrace();
         } else {
-            Long count = Application.getJdbcTemplate().queryForObject(countSql, Long.class, params);
+            Long count = AppConfig.getJdbcTemplate().queryForObject(countSql, Long.class, params);
             totalRecords = count == null ? 0 : count;
         }
     }

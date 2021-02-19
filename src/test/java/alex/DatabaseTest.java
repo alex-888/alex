@@ -1,5 +1,6 @@
 package alex;
 
+import alex.config.AppConfig;
 import alex.lib.Database;
 import alex.repository.UserLogRepository;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +18,7 @@ public class DatabaseTest {
     public void EntityTest() {
         long id = Database.insertUserLog(1, 1, "msg", "ip");
         Assertions.assertTrue(id > 0);
-        UserLogRepository userLogRepository = Application.getContext().getBean(UserLogRepository.class);
+        UserLogRepository userLogRepository = AppConfig.getContext().getBean(UserLogRepository.class);
         userLogRepository.deleteById(id);
 
     }

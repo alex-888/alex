@@ -1,6 +1,7 @@
 package alex.controller.admin.sys;
 
 import alex.Application;
+import alex.config.AppConfig;
 import alex.entity.AdminRoleEntity;
 import alex.entity.UserEntity;
 import alex.lib.*;
@@ -37,7 +38,7 @@ public class AdminUser {
         JsonResult jsonResult = new JsonResult();
         long id = Helper.longValue(request.getParameter("id"));
         UserEntity userEntity = userRepository.findById(id).orElse(null);
-        long num = Application.getJdbcTemplate().update("delete from adminUsers where userId = " + id);
+        long num = AppConfig.getJdbcTemplate().update("delete from adminUsers where userId = " + id);
         if (num == 0 || userEntity == null) {
             jsonResult.setMsg("该账号不存在,请刷新页面重试");
             return jsonResult.toString();
@@ -60,7 +61,7 @@ public class AdminUser {
         Map<String, Object> user = null;
         if (id > 0) {
             try {
-                user = Application.getJdbcTemplate().queryForMap(sql, id);
+                user = AppConfig.getJdbcTemplate().queryForMap(sql, id);
             } catch (DataAccessException e) {
                 return AdminHelper.msgPage("用户不存在", "list", request);
             }
@@ -95,7 +96,7 @@ public class AdminUser {
             return jsonResult.toString();
         }
         if (id > 0) {
-            Application.getJdbcTemplate().update("update adminUsers set roleId = ? where userId = ?", roleId, id);
+            AppConfig.getJdbcTemplate().update("update adminUsers set roleId = ? where userId = ?", roleId, id);
             jsonResult.setMsg("更新成功");
             jsonResult.setUrl("list");
             return AdminHelper.msgPage(jsonResult, request);
@@ -114,7 +115,7 @@ public class AdminUser {
             return jsonResult.toString();
         }
         try {
-            Application.getJdbcTemplate().update("insert into adminUsers set userId=?,roleId=?",
+            AppConfig.getJdbcTemplate().update("insert into adminUsers set userId=?,roleId=?",
                     userEntity.getId(), roleId);
         } catch (DuplicateKeyException e) {
             jsonResult.setMsg("新建失败,该账号已存在");

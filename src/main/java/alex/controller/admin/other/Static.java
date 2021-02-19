@@ -2,6 +2,7 @@ package alex.controller.admin.other;
 
 import alex.Application;
 import alex.cache.SystemCache;
+import alex.config.AppConfig;
 import alex.lib.AdminHelper;
 import alex.lib.Helper;
 import alex.lib.JsonResult;
@@ -36,7 +37,7 @@ public class Static {
         if (jsVersion == null) {
             jsVersion = "";
         }
-        Application.getJdbcTemplate().update("update system set value=? where entity='sys' and attribute='jsVersion'", jsVersion);
+        AppConfig.getJdbcTemplate().update("update system set value=? where entity='sys' and attribute='jsVersion'", jsVersion);
         SystemCache.setJsVersion(jsVersion);
         jsonResult.setMsg("保存成功");
         return AdminHelper.msgPage(jsonResult, request);

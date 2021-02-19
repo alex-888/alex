@@ -1,6 +1,7 @@
 package alex.controller;
 
 import alex.Application;
+import alex.config.AppConfig;
 import alex.lib.ApiJsonResult;
 import alex.lib.Helper;
 import alex.lib.JsonResult;
@@ -26,7 +27,7 @@ public class Api {
 
     @GetMapping(path = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getError() {
-        Application.getJdbcTemplate().execute("select now11()");
+        AppConfig.getJdbcTemplate().execute("select now11()");
         return Helper.getJson("");
     }
 
@@ -91,7 +92,7 @@ public class Api {
 
     @GetMapping(path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getUser() {
-        UserService userService = Application.getContext().getBean(UserService.class);
+        UserService userService = AppConfig.getContext().getBean(UserService.class);
         for (int i = 101; i< 1000; i++) {
             userService.register("user" + i, "111111", "localhost");
         }

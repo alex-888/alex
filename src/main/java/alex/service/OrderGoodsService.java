@@ -1,6 +1,7 @@
 package alex.service;
 
 import alex.Application;
+import alex.config.AppConfig;
 import alex.entity.OrderGoodsEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class OrderGoodsService {
     public void insertOrderGoods(OrderGoodsEntity ety) {
         var sql = "INSERT INTO alex.orderGoods (orderId, goodsId, specId, specDes, goodsName, price, weight, num, status, img)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
-        Application.getJdbcTemplate().update(sql, ety.getOrderId(), ety.getGoodsId(), ety.getSpecId(),
+        AppConfig.getJdbcTemplate().update(sql, ety.getOrderId(), ety.getGoodsId(), ety.getSpecId(),
                 ety.getSpecDes(), ety.getGoodsName(), ety.getPrice(), ety.getWeight(), ety.getNum(), ety.getImg());
     }
 }

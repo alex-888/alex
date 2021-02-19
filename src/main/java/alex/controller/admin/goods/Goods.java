@@ -2,6 +2,7 @@ package alex.controller.admin.goods;
 
 import alex.Application;
 import alex.cache.*;
+import alex.config.AppConfig;
 import alex.entity.CategoryEntity;
 import alex.entity.GoodsEntity;
 import alex.entity.GoodsSpecEntity;
@@ -95,7 +96,7 @@ public class Goods {
             jsonResult.setMsg("商品不存在");
             return AdminHelper.msgPage(jsonResult, request);
         }
-        Application.getJdbcTemplate().update("delete from goodsSpec where goodsId = ?", id);
+        AppConfig.getJdbcTemplate().update("delete from goodsSpec where goodsId = ?", id);
         jsonResult.setMsg("删除成功");
         return AdminHelper.msgPage(jsonResult, request);
     }
