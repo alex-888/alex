@@ -1,6 +1,5 @@
 package alex.cache;
 
-import alex.Application;
 import alex.config.AppConfig;
 import alex.lib.Helper;
 import org.springframework.stereotype.Component;

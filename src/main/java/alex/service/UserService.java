@@ -1,6 +1,5 @@
 package alex.service;
 
-import alex.Application;
 import alex.config.AppConfig;
 import alex.entity.UserEntity;
 import alex.lib.Crypto;

@@ -1,23 +1,16 @@
 package alex.controller;
 
-import alex.Application;
 import alex.config.AppConfig;
 import alex.lib.ApiJsonResult;
 import alex.lib.Helper;
-import alex.lib.JsonResult;
-import alex.lib.Pagination;
 import alex.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,21 +60,6 @@ public class Api {
         return Helper.getJson(map);
     }
 
-    @GetMapping(path = "/session", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "{}";
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.put("sessionId", session.getId());
-        Enumeration<String> names = session.getAttributeNames();
-        while (names.hasMoreElements()) {
-            String name = names.nextElement();
-            map.put(name, session.getAttribute(name));
-        }
-        return Helper.getJson(map);
-    }
 
     @GetMapping(path = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getTest(HttpServletRequest request) {

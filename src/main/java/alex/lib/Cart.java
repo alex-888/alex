@@ -1,11 +1,11 @@
 package alex.lib;
 
-import alex.Application;
 import alex.authentication.UserToken;
 import alex.cache.ExpressCache;
 import alex.config.AppConfig;
 import alex.config.RedisConfig;
 import alex.entity.GoodsSpecEntity;
+import alex.lib.session.Session;
 import alex.repository.GoodsRepository;
 import alex.repository.GoodsSpecRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Cart {
-    public static String KEY = "cart";
+    public static String NAME = "cart";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpServletRequest request;
     private final UserToken userToken;
@@ -34,9 +34,9 @@ public class Cart {
         String json;
         userToken = (UserToken) request.getAttribute(UserToken.NAME);
         if (userToken == null) {
-            json = (String) request.getSession().getAttribute(KEY);
+            json = (String) Session.from(request).get(NAME);
         } else {
-            json = RedisConfig.getStringRedisTemplate().opsForValue().get(KEY + ":" + userToken.getId());
+            json = RedisConfig.getStringRedisTemplate().opsForValue().get(NAME + ":" + userToken.getId());
         }
         if (json == null || json.length() < 10) {
             items = new LinkedList<>();
@@ -52,6 +52,7 @@ public class Cart {
             save();
         }
     }
+
     private void init() {
         goodsRepository = AppConfig.getContext().getBean(GoodsRepository.class);
         goodsSpecRepository = AppConfig.getContext().getBean(GoodsSpecRepository.class);
@@ -151,6 +152,7 @@ public class Cart {
         }
         save();
     }
+
     /**
      * 批量删除商品
      *
@@ -188,9 +190,9 @@ public class Cart {
         try {
             json = objectMapper.writeValueAsString(list);
             if (userToken == null) {
-                request.getSession().setAttribute(KEY, json);
+                Session.from(request).set(NAME, json);
             } else {
-                RedisConfig.getStringRedisTemplate().opsForValue().set(KEY + ":" + userToken.getId(), json);
+                RedisConfig.getStringRedisTemplate().opsForValue().set(NAME + ":" + userToken.getId(), json);
             }
 
         } catch (JsonProcessingException e) {

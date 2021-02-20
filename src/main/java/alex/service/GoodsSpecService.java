@@ -1,6 +1,5 @@
 package alex.service;
 
-import alex.entity.GoodsSpecEntity;
 import alex.repository.GoodsSpecRepository;
 import org.springframework.stereotype.Service;
 

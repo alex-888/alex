@@ -1,15 +1,15 @@
 package alex.lib;
 
+import alex.lib.session.Session;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 public class AdminHelper {
 
     public static String msgPage(JsonResult jsonResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.setAttribute("msg", jsonResult.getMsg());
+        Session session = Session.from(request);
+        session.set("msg", jsonResult.getMsg());
         jsonResult.setMsg(null);
         String url = jsonResult.getUrl();
         if (url != null) {
@@ -17,7 +17,7 @@ public class AdminHelper {
                 String uri = request.getRequestURI();
                 url = uri.substring(0, uri.lastIndexOf("/") + 1) + url;
             }
-            session.setAttribute("backUrl", url);
+            session.set("backUrl", url);
         }
         jsonResult.setUrl("/admin/msg");
         return jsonResult.toString();

@@ -11,7 +11,7 @@ import java.util.Map;
  * api session
  * 相关配置等在 GlobalAuth SessionConfig 中实现
  */
-public class ApiSession implements BaseSession{
+public class ApiSession implements BaseSession {
     // 请求时的参数名称
     // /api/test?token=012345678ab
     public static String REQUEST_NAME = "token";
@@ -44,9 +44,18 @@ public class ApiSession implements BaseSession{
         var obj = request.getAttribute("API_SESSION");
         return (ApiSession) obj;
     }
+
     /**
      * delete
      */
+    @Override
+    public void delete(String... keys) {
+        if (id != null) {
+            RedisConfig.getStringObjectRedisTemplate().opsForHash().delete(REDIS_PREFIX + id, (Object[]) keys);
+        }
+
+    }
+
     @Override
     public void destroy() {
         if (id != null) {
@@ -104,14 +113,6 @@ public class ApiSession implements BaseSession{
             flush();
         }
         return id;
-    }
-
-    @Override
-    public void delete(String key) {
-        if (id != null) {
-            RedisConfig.getStringObjectRedisTemplate().opsForHash().delete(REDIS_PREFIX + id, key);
-        }
-
     }
 
     /**

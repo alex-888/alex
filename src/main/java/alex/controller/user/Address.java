@@ -10,6 +10,7 @@ import alex.repository.UserAddressRepository;
 import alex.service.UserAddressService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +41,7 @@ public class Address {
         return modelAndView;
     }
 
-    @PostMapping(path = "", produces = "application/json;charset=UTF-8")
+    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postIndex(HttpServletRequest request) {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
@@ -119,7 +120,7 @@ public class Address {
         return jsonResult.toString();
     }
 
-    @GetMapping(path = "delete", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getDelete(HttpServletRequest request) {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
@@ -132,7 +133,7 @@ public class Address {
         return null;
     }
 
-    @GetMapping(path = "json", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "json", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getJson(HttpServletRequest request) {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
@@ -150,7 +151,7 @@ public class Address {
         }
     }
 
-    @GetMapping(path = "setDft", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "setDft", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getSetDft(HttpServletRequest request) {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);

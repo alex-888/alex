@@ -1,12 +1,13 @@
 package alex.controller.admin;
 
-import alex.Application;
 import alex.config.AppConfig;
 import alex.lib.Crypto;
 import alex.lib.Helper;
 import alex.lib.JsonResult;
+import alex.lib.session.Session;
 import alex.storage.Storage;
 import alex.storage.UploadResult;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,9 +32,9 @@ public class Site {
 
     @GetMapping(value = "msg")
     public ModelAndView getMsg(HttpServletRequest request, HttpServletResponse response) {
-        var session = request.getSession();
+        Session session = Session.from(request);
         ModelAndView modelAndView = Helper.newModelAndView("admin/msg", request);
-        var msg = session.getAttribute("msg");
+        var msg = session.get("msg");
         if (msg == null) {
             try {
                 response.sendRedirect("/admin");
@@ -42,9 +43,8 @@ public class Site {
             }
         }
         modelAndView.addObject("msg", msg);
-        modelAndView.addObject("backUrl", session.getAttribute("backUrl"));
-        session.removeAttribute("msg");
-        session.removeAttribute("backUrl");
+        modelAndView.addObject("backUrl", session.get("backUrl"));
+        session.delete("msg", "backUrl");
         modelAndView.addObject("title", msg);
         return modelAndView;
     }
@@ -56,7 +56,7 @@ public class Site {
         return modelAndView;
     }
 
-    @PostMapping(value = "upload", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "upload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postUpload(HttpServletRequest request,
                              @RequestParam("file") MultipartFile file) throws Exception {

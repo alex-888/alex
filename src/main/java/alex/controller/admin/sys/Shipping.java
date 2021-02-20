@@ -1,6 +1,5 @@
 package alex.controller.admin.sys;
 
-import alex.Application;
 import alex.cache.ExpressCache;
 import alex.cache.RegionCache;
 import alex.config.AppConfig;
@@ -14,7 +13,7 @@ import alex.lib.express.ProvincePrice;
 import alex.repository.ExpressCompanyRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ini4j.Reg;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,7 +60,7 @@ public class Shipping {
         return modelAndView;
     }
 
-    @PostMapping(value = "company", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "company", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postCompany(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -85,7 +84,7 @@ public class Shipping {
         return AdminHelper.msgPage(jsonResult, request);
     }
 
-    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postDelete(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -121,7 +120,7 @@ public class Shipping {
         return modelAndView;
     }
 
-    @PostMapping(value = "freeRule", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "freeRule", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postFreeRule(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -179,7 +178,7 @@ public class Shipping {
         return modelAndView;
     }
 
-    @PostMapping(value = "priceRule", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "priceRule", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postPriceRule(HttpServletRequest request) {
         PriceRule priceRule = new PriceRule();

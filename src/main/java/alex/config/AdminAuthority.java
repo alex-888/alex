@@ -1,6 +1,5 @@
 package alex.config;
 
-import alex.Application;
 import alex.entity.AdminRoleEntity;
 import alex.repository.AdminRoleRepository;
 

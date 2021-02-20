@@ -54,7 +54,7 @@ public class ControllerTest {
                 .param("password", password)
                 .param("password1", password)
                 .param("captcha", "1234")
-                .sessionAttr(Captcha.class.getSimpleName(), "1234");
+                .sessionAttr(Captcha.NAME, "1234");
         MvcResult registerResult = mockMvc.perform(requestBuilder).andReturn();
         Assertions.assertEquals(200, registerResult.getResponse().getStatus());
         UserEntity userEntity = userRepository.findByName(name);
@@ -67,7 +67,7 @@ public class ControllerTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/captcha")).andReturn();
         Session session = Session.from(mvcResult.getRequest());
         Assertions.assertNotNull(session);
-        String code = (String) session.get(Captcha.class.getSimpleName());
+        String code = (String) session.get(Captcha.NAME);
         MockHttpServletResponse response = mvcResult.getResponse();
         Assertions.assertEquals(Captcha.SIZE, code.length());
         Assertions.assertEquals(200, response.getStatus());

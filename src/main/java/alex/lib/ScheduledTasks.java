@@ -1,6 +1,5 @@
 package alex.lib;
 
-import alex.Application;
 import alex.config.AppConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

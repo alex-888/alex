@@ -36,9 +36,9 @@ public interface BaseSession {
 
     /**
      * delete key
-     * @param key key
+     * @param keys keys
      */
-    void delete(String key);
+    void delete(String... keys);
 
     /**
      * set key value

@@ -126,9 +126,10 @@ public class Session implements BaseSession {
     }
 
     @Override
-    public void delete(String key) {
+    public void delete(String... keys) {
+
         if (id != null) {
-            RedisConfig.getStringObjectRedisTemplate().opsForHash().delete(REDIS_PREFIX + id, key);
+            RedisConfig.getStringObjectRedisTemplate().opsForHash().delete(REDIS_PREFIX + id,(Object[]) keys);
         }
     }
 

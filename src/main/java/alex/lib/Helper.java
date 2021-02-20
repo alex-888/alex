@@ -1,24 +1,21 @@
 package alex.lib;
 
-import alex.Application;
-import alex.cache.CategoryCache;
 import alex.cache.SystemCache;
+import alex.lib.session.Session;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Random;
 
 /**
  * helper class
@@ -172,8 +169,8 @@ public class Helper {
     }
 
     public static String msgPage(JsonResult jsonResult, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.setAttribute("msg", jsonResult.getMsg());
+        Session session = Session.from(request);
+        session.set("msg", jsonResult.getMsg());
         jsonResult.setMsg(null);
         String url = jsonResult.getUrl();
         if (url != null) {
@@ -181,7 +178,7 @@ public class Helper {
                 String uri = request.getRequestURI();
                 url = uri.substring(0, uri.lastIndexOf("/") + 1) + url;
             }
-            session.setAttribute("backUrl", url);
+            session.set("backUrl", url);
         }
         jsonResult.setUrl("/msg");
         return jsonResult.toString();

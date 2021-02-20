@@ -2,7 +2,6 @@ package alex.lib;
 
 import alex.lib.session.Session;
 
-import javax.servlet.http.HttpSession;
 import java.util.regex.Pattern;
 
 public class Validate {
@@ -23,7 +22,7 @@ public class Validate {
 
     public static String captcha(String captcha, Session session, String alias) {
         if (captcha != null && session != null) {
-            String val = (String) session.get(Captcha.class.getSimpleName());
+            String val = (String) session.get(Captcha.NAME);
             if (captcha.equals(val)) {
                 return null;
             }

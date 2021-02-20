@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Captcha {
+    public final static String NAME = "captcha";
     // 验证码长度
     public final static long SIZE = 4;
     private static final char[] mapTable = {
@@ -20,7 +21,7 @@ public class Captcha {
         if (session == null) {
             return;
         }
-        session.delete(Captcha.class.getSimpleName());
+        session.delete(Captcha.NAME);
     }
 
     public static CaptchaResult getImageCode() {

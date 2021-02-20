@@ -7,6 +7,7 @@ import alex.repository.SpecRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,7 @@ public class Spec {
     @Resource
     SpecRepository specRepository;
 
-    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postDelete(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -66,7 +67,7 @@ public class Spec {
         return modelAndView;
     }
 
-    @PostMapping(value = "edit", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "edit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postEdit(HttpServletRequest request) {
         String[] dStr = new String[]{" "};

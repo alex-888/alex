@@ -1,6 +1,5 @@
 package alex.controller.admin.sys;
 
-import alex.Application;
 import alex.config.AppConfig;
 import alex.config.RedisConfig;
 import alex.lib.Helper;
@@ -18,7 +17,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Controller(value = "admin/sys/info")
 @RequestMapping(path = "/admin/sys/info")

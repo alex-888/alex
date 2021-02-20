@@ -1,6 +1,5 @@
 package alex.controller.admin.sys;
 
-import alex.Application;
 import alex.config.AdminAuthority;
 import alex.config.AppConfig;
 import alex.entity.AdminRoleEntity;
@@ -11,6 +10,7 @@ import alex.lib.Pagination;
 import alex.repository.AdminRoleRepository;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +34,7 @@ public class AdminRole {
     @Resource
     AdminRoleRepository adminRoleRepository;
 
-    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postDelete(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -86,7 +86,7 @@ public class AdminRole {
         return modelAndView;
     }
 
-    @PostMapping(value = "edit", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "edit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postEdit(HttpServletRequest request) {
         String name = request.getParameter("name");

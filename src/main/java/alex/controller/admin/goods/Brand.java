@@ -1,6 +1,5 @@
 package alex.controller.admin.goods;
 
-import alex.Application;
 import alex.cache.BrandCache;
 import alex.config.AppConfig;
 import alex.entity.BrandEntity;
@@ -9,6 +8,7 @@ import alex.lib.Helper;
 import alex.lib.JsonResult;
 import alex.lib.Pagination;
 import alex.repository.BrandRepository;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +26,7 @@ public class Brand {
     @Resource
     BrandRepository brandRepository;
 
-    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postDelete(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -68,7 +68,7 @@ public class Brand {
         return modelAndView;
     }
 
-    @PostMapping(value = "edit", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "edit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postEdit(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();

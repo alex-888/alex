@@ -6,11 +6,11 @@ import alex.lib.Helper;
 import alex.lib.JsonResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
                 modelAndView.addObject("error", "无此权限");
                 return modelAndView;
             } else {
-                response.setContentType("application/json;charset=UTF-8");
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 JsonResult jsonResult = new JsonResult();
                 jsonResult.setMsg("无此权限");
                 try {
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
                     ex.printStackTrace();
                 }
             } else {
-                response.setContentType("application/json;charset=UTF-8");
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 JsonResult jsonResult = new JsonResult();
                 jsonResult.setUrl(loginUrl);
                 try {

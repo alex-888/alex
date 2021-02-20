@@ -9,6 +9,7 @@ import alex.repository.UserAddressRepository;
 import alex.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -100,7 +101,7 @@ public class Cart {
      * @param request req
      * @return re
      */
-    @PostMapping(path = "buy", produces = "application/json; charset=UTF-8")
+    @PostMapping(path = "buy", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postBuy(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -119,7 +120,7 @@ public class Cart {
         return Helper.msgPage(jsonResult, request);
     }
 
-    @GetMapping(path = "json", produces = "application/json; charset=UTF-8")
+    @GetMapping(path = "json", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getJson(HttpServletRequest request) {
         long goodsId = Helper.longValue(request.getParameter("goodsId"));

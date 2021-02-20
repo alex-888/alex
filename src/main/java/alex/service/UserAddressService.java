@@ -1,6 +1,5 @@
 package alex.service;
 
-import alex.Application;
 import alex.config.AppConfig;
 import alex.entity.UserAddressEntity;
 import alex.repository.UserAddressRepository;

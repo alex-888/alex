@@ -1,6 +1,5 @@
 package alex.controller.admin.sys;
 
-import alex.Application;
 import alex.config.AppConfig;
 import alex.entity.AdminRoleEntity;
 import alex.entity.UserEntity;
@@ -9,6 +8,7 @@ import alex.repository.AdminRoleRepository;
 import alex.repository.UserRepository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +32,7 @@ public class AdminUser {
     @Resource
     UserRepository userRepository;
 
-    @PostMapping(value = "delete", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postDelete(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();
@@ -85,7 +85,7 @@ public class AdminUser {
         return modelAndView;
     }
 
-    @PostMapping(value = "edit", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "edit", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postEdit(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();

@@ -1,6 +1,5 @@
 package alex.storage;
 
-import alex.Application;
 import alex.config.AppConfig;
 
 import java.io.File;

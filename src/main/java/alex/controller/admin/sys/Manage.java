@@ -1,6 +1,5 @@
 package alex.controller.admin.sys;
 
-import alex.Application;
 import alex.cache.SystemCache;
 import alex.config.AppConfig;
 import alex.lib.AdminHelper;
@@ -8,6 +7,7 @@ import alex.lib.Crypto;
 import alex.lib.Helper;
 import alex.lib.JsonResult;
 import alex.repository.SystemRepository;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +48,7 @@ public class Manage {
         return modelAndView;
     }
 
-    @PostMapping(value = "", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postIndex(HttpServletRequest request) {
         JsonResult jsonResult = new JsonResult();

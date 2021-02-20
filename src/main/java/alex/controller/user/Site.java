@@ -1,14 +1,13 @@
 package alex.controller.user;
 
-import alex.Application;
 import alex.authentication.UserToken;
 import alex.config.AppConfig;
 import alex.entity.UserEntity;
-import alex.lib.Cart;
 import alex.lib.*;
 import alex.lib.session.Session;
 import alex.repository.UserRepository;
 import alex.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,8 +47,7 @@ public class Site {
     }
 
 
-
-    @PostMapping(path = "info", produces = "application/json;charset=UTF-8")
+    @PostMapping(path = "info", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postInfo(
             HttpServletRequest request,
@@ -89,7 +87,7 @@ public class Site {
         return modelAndView;
     }
 
-    @PostMapping(path = "login", produces = "application/json;charset=UTF-8")
+    @PostMapping(path = "login", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postLogin(
             HttpServletRequest request,
@@ -116,6 +114,7 @@ public class Site {
             Cart cart = new Cart(request);
             if (oldCart != null) {
                 oldCart.getItems().forEach(item -> cart.add(item.getGoodsId(), item.getSpecId(), item.getNum()));
+                session.delete(Cart.NAME);
             }
             jsonResult.setUrl(back);
 
@@ -129,12 +128,12 @@ public class Site {
 
     @GetMapping(path = "password")
     public ModelAndView getPassword(HttpServletRequest request) {
-        ModelAndView modelAndView =Helper.newModelAndView("user/password", request);
+        ModelAndView modelAndView = Helper.newModelAndView("user/password", request);
         modelAndView.addObject("title", "修改密码");
         return modelAndView;
     }
 
-    @PostMapping(path = "password", produces = "application/json;charset=UTF-8")
+    @PostMapping(path = "password", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postPassword(
             HttpServletRequest request,
@@ -189,7 +188,7 @@ public class Site {
         return Helper.newModelAndView("user/register", request);
     }
 
-    @PostMapping(path = "register", produces = "application/json;charset=UTF-8")
+    @PostMapping(path = "register", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postRegister(
             HttpServletRequest request,
@@ -237,7 +236,7 @@ public class Site {
         return result.toString();
     }
 
-    @GetMapping(path = "/test", produces = "application/json;charset=UTF-8")
+    @GetMapping(path = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getTest(HttpServletRequest request) {
 

@@ -1,18 +1,15 @@
 package alex.controller;
 
-import alex.Application;
 import alex.cache.CategoryCache;
 import alex.cache.GoodsCache;
 import alex.cache.RegionCache;
 import alex.config.AppConfig;
-import alex.entity.GoodsEntity;
 import alex.lib.Captcha;
 import alex.lib.Helper;
 import alex.lib.Pagination;
 import alex.lib.session.Session;
 import alex.storage.LocalStorage;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +25,9 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class Site {
@@ -43,7 +42,7 @@ public class Site {
         response.setContentType("image/png");
         OutputStream os = response.getOutputStream();
         var captchaResult = Captcha.getImageCode();
-        session.set(Captcha.class.getSimpleName(), captchaResult.getPhrase().toLowerCase());
+        session.set(Captcha.NAME, captchaResult.getPhrase().toLowerCase());
         try {
             ImageIO.write(captchaResult.getImage(), "png", os);
         } catch (IOException e) {
@@ -130,7 +129,7 @@ public class Site {
         return modelAndView;
     }
 
-    @GetMapping(path = "region", produces = "application/json; charset=UTF-8")
+    @GetMapping(path = "region", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getRegion() {
         return RegionCache.getRegionJson();
@@ -165,9 +164,9 @@ public class Site {
 
     @GetMapping(value = "msg")
     public ModelAndView getMsg(HttpServletRequest request, HttpServletResponse response) {
-        var session = request.getSession();
+        Session session = Session.from(request);
         ModelAndView modelAndView = Helper.newModelAndView("msg", request);
-        var msg = session.getAttribute("msg");
+        var msg = session.get("msg");
         if (msg == null) {
             try {
                 response.sendRedirect("/");
@@ -176,11 +175,22 @@ public class Site {
             }
         }
         modelAndView.addObject("msg", msg);
-        modelAndView.addObject("backUrl", session.getAttribute("backUrl"));
-        session.removeAttribute("msg");
-        session.removeAttribute("backUrl");
+        modelAndView.addObject("backUrl", session.get("backUrl"));
+        session.delete("msg", "backUrl");
         modelAndView.addObject("title", msg);
         return modelAndView;
+    }
+
+    @GetMapping(path = "/session", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getSession(HttpServletRequest request) {
+        Session session = Session.from(request);
+        if (session.getId(false) == null) {
+            return "{}";
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("sessionId", session.getId(false));
+        session.getAll().forEach(map::put);
+        return Helper.getJson(map);
     }
 
     @GetMapping(value = "/upload", produces = "text/html; charset=UTF-8")
