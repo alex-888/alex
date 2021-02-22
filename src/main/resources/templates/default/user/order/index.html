@@ -12,27 +12,44 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">首页</a></li>
                 <li class="breadcrumb-item"><a href="/user/central">用户中心</a></li>
-                <li class="breadcrumb-item active" aria-current="page" th:text="${title}"></li>
+                <li aria-current="page" class="breadcrumb-item active" th:text="${title}"></li>
             </ol>
         </nav>
     </div>
     <div th:replace="__${theme}__/user/components::menu"></div>
 
     <div class="col-10">
-        <table th:each="order,iter : ${pagination.rows}">
-            <tr>
-                <th th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></th>
-                <th th:text="${'订单号:' + order.no}"></th>
-                <th colspan="9"></th>
-            </tr>
-            <tr th:each="goods : ${order.goodsList}">
-                <td><a th:href="@{/goods/{id}.html(id=${goods.goodsId})}">
-                    <img th:src="${#helpers.imgZoom(goods.img, 80, 80)}"></a></td>
-                <td><a th:href="@{/goods/{id}.html(id=${goods.goodsId})}" th:text="${goods.goodsName}"></a></td>
-                <td class="price" th:text="${#helpers.priceFormat(goods.price)}"></td>
-                <td th:text="${goods.num}"></td>
-            </tr>
-        </table>
+        <div class="order-status-select">
+            <div class="item"><a href="/user/order">
+                所有订单
+            </a></div>
+
+            <a class="item" href="/user/order">待付款</a>
+            <a class="item" href="/user/order">待发货</a>
+            <a class="item" href="/user/order">待收货</a>
+            <div class="last-item">
+                <a href="/user/order">订单回收站</a>
+            </div>
+
+        </div>
+
+        <div class="order-item" th:each="order,iter : ${pagination.rows}">
+            <table >
+                <tr>
+                    <th th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></th>
+                    <th th:text="${'订单号:' + order.no}"></th>
+                    <th colspan="9"></th>
+                </tr>
+                <tr th:each="goods : ${order.goodsList}">
+                    <td><a th:href="@{/goods/{id}.html(id=${goods.goodsId})}">
+                        <img class="img-80" onerror="this.onerror=null;this.style.visibility='hidden'"
+                             th:src="${#helpers.imgZoom(goods.img, 80, 80)}"></a></td>
+                    <td><a th:href="@{/goods/{id}.html(id=${goods.goodsId})}" th:text="${goods.goodsName}"></a></td>
+                    <td class="price" th:text="${#helpers.priceFormat(goods.price)}"></td>
+                    <td th:text="${goods.num}"></td>
+                </tr>
+            </table>
+        </div>
 
 
         <nav th:utext="${pagination.generateWebPagination()}"></nav>

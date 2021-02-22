@@ -555,6 +555,16 @@ html {
 img {
     border: none;
 }
+/** img 常用尺寸定义 */
+.img-220 {
+    width: 220px;
+    height: 220px;
+}
+
+.img-80 {
+    width: 80px;
+    height: 80px;
+}
 
 input:not([type=checkbox]), select {
     height: 2.8rem;
@@ -807,11 +817,6 @@ th {
 .goodsItemBg:hover {
     box-shadow: 0 0 6px 0 #dedede;
     border: 1px solid #dedede;
-}
-
-.goodsItem img {
-    height: 220px;
-    width: 220px;
 }
 
 .goodsItem .price {
