@@ -1,6 +1,4 @@
 logs/
-*.log*
-*.jar
 src/main/resources/application.yml
 target/
 img/

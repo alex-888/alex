@@ -1,9 +1,11 @@
 package alex.controller.user;
 
 import alex.authentication.UserToken;
+import alex.entity.OrderEntity;
 import alex.lib.Helper;
 import alex.lib.Pagination;
 import alex.repository.OrderGoodsRepository;
+import alex.repository.OrderRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +17,32 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(path = "user/order")
 public class Order {
+
+    @Resource
+    OrderRepository orderRepository;
+
     @Resource
     OrderGoodsRepository orderGoodsRepository;
 
+    /**
+     * 订单详情
+     * @param request
+     * @return
+     */
+    @GetMapping(path = "detail")
+    public ModelAndView getDetail(HttpServletRequest request) {
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
+        // 订单号
+        long no = Helper.longValue(request.getParameter("no"));
+        OrderEntity orderEntity = orderRepository.findByNo(no);
+        if (orderEntity == null || orderEntity.getUserId() != userToken.getId()) {
+            return Helper.msgPage("订单不存在", null, request);
+        }
+
+        ModelAndView modelAndView = Helper.newModelAndView("user/order/detail", request);
+
+        return modelAndView;
+    }
     @GetMapping(path = "")
     public ModelAndView getIndex(HttpServletRequest request) {
         UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);

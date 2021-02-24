@@ -70,7 +70,8 @@ form li {
     width: 20%;
 }
 .order-status-select .last-item{
-    border-bottom: #e8e8e8 2px solid;
+
+    border-bottom: #e8e8e8 1px solid;
     display: inline-block;
     text-align: right;
     width: 80%;
@@ -78,6 +79,7 @@ form li {
 
 /* 我的订单中的单个订单 */
 .order-item {
+    background-color: #ececec;
     display: flex;
     flex-direction: column;
     border: #ececec 1px solid;
@@ -87,10 +89,59 @@ form li {
     flex-grow: 1;
     width: 100%;
 }
-.order-item table tr{
+/* 默认 下边框 填充 */
+.order-item table td {
     border-bottom: #ececec 1px solid;
+    padding: 0.4rem 0.3rem 0 0.5rem;
+}
+/* 左右边框 */
+.order-item table td.border2 {
+    border-bottom-color: #fff;
+    border-left: 1px solid #ececec;
+    border-right: 1px solid #ececec;
+}
+
+/* 无边框(白边框) */
+.order-item table td.border-none {
+    border-bottom-color: #fff;
+}
+
+.order-item table th {
+    font-weight: normal;
+}
+.order-item table tr{
+    background-color: #fff;
 }
 
 .order-item table tr:first-child{
     background-color: #ececec;
 }
+.order-item table tr:first-child td{
+    height: 2.2rem;
+}
+/* 商品图片td宽度*/
+.order-item table tr td:first-child{
+    padding-right: 0;
+    width: 100px;
+}
+/* 商品名称td宽度*/
+.order-item table tr td:nth-child(2){
+    width: 500px;
+    word-break: break-all;
+    overflow: hidden;
+
+}
+
+/* 商品价格td宽度*/
+.order-item table tr td:nth-child(3){
+    width: 90px;
+}
+/* 商品数量td宽度*/
+.order-item table tr td:nth-child(4){
+    width: 60px;
+}
+/* 订单价格td宽度*/
+.order-item table tr td:nth-child(5){
+    width: 110px;
+}
+

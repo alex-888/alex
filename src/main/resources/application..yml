@@ -2,7 +2,7 @@ app:
   key:
 logging:
   file:
-    name: log/run.log
+    name: logs/run.log
   logback:
     rollingpolicy:
       clean-history-on-start: true
