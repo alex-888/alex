@@ -2,6 +2,7 @@ package alex.lib;
 
 import alex.cache.RegionCache;
 import alex.cache.SystemCache;
+import alex.lib.status.OrderGoodsStatus;
 
 /**
  * thymeleaf utils
@@ -9,6 +10,9 @@ import alex.cache.SystemCache;
  */
 public class HelperUtils {
 
+    public static String getOrderGoodsStatus(long code) {
+        return OrderGoodsStatus.getStatus(code);
+    }
     public static Region getRegion(long code) {
         return RegionCache.getRegion(code);
     }

@@ -2,6 +2,7 @@ package alex.controller.user;
 
 import alex.authentication.UserToken;
 import alex.entity.OrderEntity;
+import alex.entity.OrderGoodsEntity;
 import alex.lib.Helper;
 import alex.lib.Pagination;
 import alex.repository.OrderGoodsRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "user/order")
@@ -26,8 +28,8 @@ public class Order {
 
     /**
      * 订单详情
-     * @param request
-     * @return
+     * @param request request
+     * @return view
      */
     @GetMapping(path = "detail")
     public ModelAndView getDetail(HttpServletRequest request) {
@@ -38,8 +40,12 @@ public class Order {
         if (orderEntity == null || orderEntity.getUserId() != userToken.getId()) {
             return Helper.msgPage("订单不存在", null, request);
         }
+        List<OrderGoodsEntity> goodsList = orderGoodsRepository.findAllByOrderId(orderEntity.getId());
 
         ModelAndView modelAndView = Helper.newModelAndView("user/order/detail", request);
+        modelAndView.addObject("goodsList", goodsList);
+        modelAndView.addObject("order", orderEntity);
+        modelAndView.addObject("title", "订单详情");
 
         return modelAndView;
     }

@@ -18,8 +18,51 @@
     </div>
     <div th:replace="__${theme}__/user/components::menu"></div>
 
-    <div class="col-10">
-        订单详情
+    <div class="col-10 padding-0">
+        <div class="row">
+            <div class="col-3" th:text="${'订单编号: ' + order.no}"></div>
+            <div class="col-3">
+                订单状态:
+            </div>
+            <div class="col-3" th:text="${'下单时间 : ' + #dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+            <div class="col-3" th:text="${'订单编号: ' + order.no}"></div>
+        </div>
+        <div class="order-detail">
+            <table>
+                <tr>
+                    <td></td>
+                    <td>商品</td>
+                    <td>状态</td>
+                    <td>单价</td>
+                    <td>数量</td>
+                    <td class="text-center">订单金额</td>
+                    <td class="text-center">运费</td>
+                </tr>
+                <tr th:each="goods,itor : ${goodsList}">
+                    <td>
+                        <a th:href="@{/goods/{id}.html(id=${goods.goodsId})}">
+                            <img class="img-80" th:src="${#helpers.imgZoom(goods.img, 80, 80)}"></a></td>
+
+                    <td>
+                        <a th:href="@{/goods/{id}.html(id=${goods.goodsId})}" th:text="${goods.goodsName}"></a>
+                        <span class="spec" th:if="${goods.specId > 0}" th:text="${goods.specDes}"></span>
+                    </td>
+
+                    <td th:text="${#helpers.getOrderGoodsStatus(goods.status)}">
+                    </td>
+                    <td th:text="${'￥' + #helpers.priceFormat(goods.price)}"></td>
+                    <td th:text="${goods.num}"></td>
+                    <td class="border2 text-center" th:if="${itor.index == 0}">
+                        <span class="price">[[${#helpers.priceFormat(order.price)}]]</span>
+                    </td>
+                    <td class="border2 border-top-none" th:if="${itor.index > 0}"></td>
+                    <td class="text-center" th:if="${itor.index == 0}">
+                        0
+                    </td>
+                    <td class="border-top-none" th:if="${itor.index > 0}"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 

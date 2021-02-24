@@ -435,7 +435,9 @@ header .topNav #tagsList a {
 }
 
 #headerCartItems .item div.footer span.spec {
+    color: #808080;
     float: left;
+    font-size: 0.9rem;
 }
 
 #headerCartItems .item div.footer span.num {
@@ -614,7 +616,7 @@ label {
     visibility: visible;
 }
 
-.padding0 {
+.padding-0 {
     padding: 0;
 }
 
