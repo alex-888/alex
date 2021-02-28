@@ -5,10 +5,7 @@ import alex.entity.*;
 import alex.lib.Cart;
 import alex.lib.GoodsStatus;
 import alex.lib.Helper;
-import alex.repository.GoodsRepository;
-import alex.repository.GoodsSpecRepository;
-import alex.repository.UserAddressRepository;
-import alex.repository.UserRepository;
+import alex.repository.*;
 import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -27,6 +24,9 @@ public class OrderService {
     GoodsSpecRepository goodsSpecRepository;
 
     @Resource
+    OrderRepository orderRepository;
+
+    @Resource
     OrderGoodsService orderGoodsService;
 
     @Resource
@@ -35,6 +35,19 @@ public class OrderService {
     @Resource
     UserRepository userRepository;
 
+    public  String cancelOrder(long orderNo) {
+
+        return cancelOrder(orderRepository.findByNo(orderNo));
+    }
+
+    public String cancelOrder(OrderEntity order) {
+
+        if (order == null) {
+            return "订单不存在";
+        }
+        if (order.getStatus() != 0L) {}
+        return null;
+    }
     /**
      * 根据订单ID生成订单号
      *
@@ -82,7 +95,7 @@ public class OrderService {
         }
         UserEntity userEntity = userRepository.findByIdForUpdate(userId);
         //要购买的商品,完成后从购物车清除
-        Set<Cart.Item> cartItems = new HashSet<>();
+        Set<Cart.Item> cartItems = new LinkedHashSet<>();
         for (var item : cart.getItems()) {
             if (!item.isSelected()) {
                 continue;
@@ -142,7 +155,7 @@ public class OrderService {
         orderEntity.setRegion(addr.getRegion());
         orderEntity.setConsignee(addr.getConsignee());
         orderEntity.setPhone(addr.getPhone());
-        orderEntity.setPrice(sumPrice);
+        orderEntity.setPrice(sumPrice + shippingFee);
         orderEntity.setShippingFee(shippingFee);
 
         // 扣库存，创建订单商品

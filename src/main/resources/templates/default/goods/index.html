@@ -13,7 +13,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">首页</a></li>
                 <li class="breadcrumb-item" th:each="categoryEntity : ${categoryPath}">
-                    <a th:href="'/list?cid=' + ${categoryEntity.id}" th:text="${categoryEntity.name}"></a>
+                    <a th:href="@{/list(cid=${categoryEntity.id})}" th:text="${categoryEntity.name}"></a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page" th:text="${goodsEntity.name}"></li>
             </ol>

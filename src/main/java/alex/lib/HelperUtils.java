@@ -2,7 +2,10 @@ package alex.lib;
 
 import alex.cache.RegionCache;
 import alex.cache.SystemCache;
+import alex.lib.status.AccountStatus;
 import alex.lib.status.OrderGoodsStatus;
+import alex.lib.status.OrderStatus;
+import alex.lib.status.SexStatus;
 
 /**
  * thymeleaf utils
@@ -10,9 +13,43 @@ import alex.lib.status.OrderGoodsStatus;
  */
 public class HelperUtils {
 
-    public static String getOrderGoodsStatus(long code) {
-        return OrderGoodsStatus.getStatus(code);
+    /**
+     * 获取账号状态信息
+     * @param code code
+     * @return info
+     */
+    public static String getAccountStatusInfo(long code){
+        return AccountStatus.getStatusInfo(code);
     }
+    /**
+     * 获取性别信息
+     * @param code code
+     * @return info
+     */
+    public static String getSexStatusInfo(long code) {
+        return SexStatus.getStatusInfo(code);
+    }
+
+    /**
+     * 获取订单商品状态信息
+     *
+     * @param code 订单商品状态码
+     * @return 状态信息
+     */
+    public static String getOrderGoodsStatusInfo(long code) {
+        return OrderGoodsStatus.getStatusInfo(code);
+    }
+
+    /**
+     * 获取订单状态信息
+     *
+     * @param code 订单状态码
+     * @return 状态信息
+     */
+    public static String getOrderStatusInfo(long code) {
+        return OrderStatus.getStatusInfo(code);
+    }
+
     public static Region getRegion(long code) {
         return RegionCache.getRegion(code);
     }
@@ -66,7 +103,7 @@ public class HelperUtils {
      * retouch css/js file path
      *
      * @param path css/js file path
-     * @return
+     * @return css/js file url
      */
     public static String retouch(String path) {
         return SystemCache.getJsPath() + path + "?v=" + SystemCache.getJsVersion();

@@ -10,11 +10,12 @@ public class PayStatus {
 
     static {
         STATUS = new HashMap<>();
-        STATUS.put(0L, "待付款");
-        STATUS.put(1L, "已付款");
+        STATUS.put(0L, "未支付");
+        STATUS.put(1L, "已支付");
         STATUS.put(2L, "已退款");
     }
-    public static String getStatus(long code) {
+
+    public static String getStatusInfo(long code) {
         return STATUS.get(code);
     }
 }

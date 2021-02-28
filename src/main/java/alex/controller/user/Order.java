@@ -27,6 +27,26 @@ public class Order {
     OrderGoodsRepository orderGoodsRepository;
 
     /**
+     * 取消订单
+     * @param request request
+     * @return view
+     */
+    @GetMapping(path = "cancel")
+    public ModelAndView getCancel(HttpServletRequest request) {
+        UserToken userToken = (UserToken) request.getAttribute(UserToken.NAME);
+        // 订单号
+        long no = Helper.longValue(request.getParameter("no"));
+        OrderEntity orderEntity = orderRepository.findByNo(no);
+        if (orderEntity == null || orderEntity.getUserId() != userToken.getId()) {
+            return Helper.msgPage("订单不存在", null, request);
+        }
+        if (orderEntity.getStatus() != 0) {
+
+        }
+        return Helper.msgPage(String.format("订单 %s 已取消", no), "/user/order", request);
+    }
+
+    /**
      * 订单详情
      * @param request request
      * @return view

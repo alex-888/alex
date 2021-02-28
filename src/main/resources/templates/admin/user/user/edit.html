@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/components::head(~{}, ~{})"></head>
+<body class="container-fluid">
+
+<div th:replace="admin/components::header"/>
+<div class="alert alert-primary" role="alert">
+    [[${title}]]
+</div>
+<div class="row">
+    <div class="col-md-3">
+        账号:&nbsp;[[${user.name}]]
+    </div>
+    <div class="col-md-3">
+        账号状态:&nbsp;[[${#helpers.getAccountStatusInfo(user.status)}]]
+    </div>
+    <div class="col-md-3">
+        性别:&nbsp;[[${#helpers.getSexStatusInfo(user.sex)}]]
+    </div>
+    <div class="col-md-3">
+        电话:&nbsp;[[${user.phone}]]
+    </div>
+    <div class="col-md-3">
+        余额:&nbsp;[[${#helpers.priceFormat(user.surplus)}]]
+    </div>
+    <div class="col-md-3">
+        最近登录时间:&nbsp;[[${user.lastLoginTime}]]
+    </div>
+    <div class="col-md-3">
+        最近登录IP:&nbsp;[[${user.lastLoginIp}]]
+    </div>
+    <div class="col-md-3">
+        注册时间:&nbsp;[[${user.registerTime}]]
+    </div>
+    <div class="col-md-3">
+        注册IP:&nbsp;[[${user.registerIp}]]
+    </div>
+</div>
+<br>
+<div th:replace="admin/components::footer"/>
+</body>
+</html>

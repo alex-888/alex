@@ -55,7 +55,7 @@ public class UserService {
             return result;
         }
         result.errors.clear();
-        int status = userEntity.getStatus();
+        long status = userEntity.getStatus();
         if (status != 1) {
             result.errors.put("name", "用户被锁定");
             Database.insertUserLog(uid, 2, "用户被锁定", ip);

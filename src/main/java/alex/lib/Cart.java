@@ -247,7 +247,11 @@ public class Cart {
         var priceRule = ExpressCache.getPriceRule();
         // 包邮商品产生的物流费用
         long price1 = 0;
-        price1 = priceRule.getShippingFee(code, sumWeightShippingFree());
+        // 包邮商品重量
+        long weightFree = sumWeightShippingFree();
+        if (weightFree > 0) {
+            price1 = priceRule.getShippingFee(code, sumWeightShippingFree());
+        }
 
         // 全部商品产生的快递非哟
         long price2 = priceRule.getShippingFee(code, sumWeight());

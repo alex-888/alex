@@ -14,7 +14,8 @@ public class UserEntity {
     private String phone;
     private String name;
     private String password;
-    private int status;
+    private long sex;
+    private long status;
     private long surplus;
     private String registerIp;
     private Timestamp registerTime;
@@ -97,12 +98,19 @@ public class UserEntity {
         this.registerIp = registerIp;
     }
 
-    @Column(columnDefinition = "tinyint")
-    public int getStatus() {
+    public long getSex() {
+        return sex;
+    }
+
+    public void setSex(long sex) {
+        this.sex = sex;
+    }
+
+    public long getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(long status) {
         this.status = status;
     }
 

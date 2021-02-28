@@ -116,7 +116,7 @@ public class Cart {
         if (orderInfo.getErr() != null) {
             return jsonResult.setMsg(orderInfo.getErr()).toString();
         }
-        jsonResult.setMsg("已完成下单").setUrl("/");
+        jsonResult.setMsg("已完成下单").setUrl("/user/order");
         return Helper.msgPage(jsonResult, request);
     }
 

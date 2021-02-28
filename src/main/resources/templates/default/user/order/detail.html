@@ -20,12 +20,10 @@
 
     <div class="col-10 padding-0">
         <div class="row">
-            <div class="col-3" th:text="${'订单编号: ' + order.no}"></div>
-            <div class="col-3">
-                订单状态:
-            </div>
             <div class="col-3" th:text="${'下单时间 : ' + #dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
             <div class="col-3" th:text="${'订单编号: ' + order.no}"></div>
+            <div class="col-3" th:text="${'订单状态: ' + #helpers.getOrderStatusInfo(order.status)}"></div>
+            <div class="col-3" th:text="${'下单时间 : ' + #dates.format(order.payTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
         </div>
         <div class="order-detail">
             <table>
@@ -48,7 +46,7 @@
                         <span class="spec" th:if="${goods.specId > 0}" th:text="${goods.specDes}"></span>
                     </td>
 
-                    <td th:text="${#helpers.getOrderGoodsStatus(goods.status)}">
+                    <td th:text="${#helpers.getOrderGoodsStatusInfo(goods.status)}">
                     </td>
                     <td th:text="${'￥' + #helpers.priceFormat(goods.price)}"></td>
                     <td th:text="${goods.num}"></td>
@@ -56,9 +54,7 @@
                         <span class="price">[[${#helpers.priceFormat(order.price)}]]</span>
                     </td>
                     <td class="border2 border-top-none" th:if="${itor.index > 0}"></td>
-                    <td class="text-center" th:if="${itor.index == 0}">
-                        0
-                    </td>
+                    <td class="text-center" th:if="${itor.index == 0}" th:text="'￥'+${#helpers.priceFormat(order.shippingFee)}"></td>
                     <td class="border-top-none" th:if="${itor.index > 0}"></td>
                 </tr>
             </table>
