@@ -17,6 +17,7 @@ public class AdminMenu {
         items.put("商品-商品规格", "/admin/goods/spec/list");
         items.put("订单-订单列表", "/admin/order/order/list");
         items.put("会员-会员列表", "/admin/user/user/list");
+
         items.put("系统-系统管理", "/admin/sys/manage");
         items.put("系统-管理员", "/admin/sys/adminUser/list");
         items.put("系统-角色", "/admin/sys/adminRole/list");
@@ -26,6 +27,7 @@ public class AdminMenu {
         items.put("系统-运费规则", "/admin/sys/shipping/priceRule");
         items.put("系统-系统信息", "/admin/sys/info");
 
+        items.put("其它-首页轮播", "/admin/other/home/carousel");
         items.put("其它-静态文件", "/admin/other/static");
         items.put("其它-文章分类", "/admin/other/article/category");
         items.put("其它-文章管理", "/admin/other/article/list");

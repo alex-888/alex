@@ -6,6 +6,7 @@ import alex.lib.Crypto;
 import alex.lib.Database;
 import alex.lib.Helper;
 import alex.lib.Validate;
+import alex.lib.status.AccountStatus;
 import alex.repository.UserRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -56,9 +57,9 @@ public class UserService {
         }
         result.errors.clear();
         long status = userEntity.getStatus();
-        if (status != 1) {
-            result.errors.put("name", "用户被锁定");
-            Database.insertUserLog(uid, 2, "用户被锁定", ip);
+        if (status !=  0) {
+            result.errors.put("name", AccountStatus.getStatusInfo(status));
+            Database.insertUserLog(uid, 2,  AccountStatus.getStatusInfo(status), ip);
             return result;
         }
         userRepository.updateForLogin(uid, ip);

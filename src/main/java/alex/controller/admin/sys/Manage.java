@@ -6,7 +6,9 @@ import alex.lib.AdminHelper;
 import alex.lib.Crypto;
 import alex.lib.Helper;
 import alex.lib.JsonResult;
-import alex.repository.SystemRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,16 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller(value = "admin/sys/manage")
 @RequestMapping(path = "/admin/sys/manage")
 public class Manage {
-    @Resource
-    SystemRepository systemRepository;
 
     @GetMapping(value = "")
     public ModelAndView getIndex(HttpServletRequest request) {
@@ -92,4 +92,5 @@ public class Manage {
         jsonResult.setMsg("保存成功");
         return AdminHelper.msgPage(jsonResult, request);
     }
+
 }

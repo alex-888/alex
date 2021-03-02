@@ -17,6 +17,9 @@ public class SystemCache {
     //备案号
     private static String beian;
 
+    // 首页轮播
+    private static String carousel;
+
     //静态文件路径
     private static String jsPath;
     //静态文件版本号
@@ -47,6 +50,9 @@ public class SystemCache {
                 switch (entity.getAttribute()) {
                     case "beian":
                         beian = entity.getValue();
+                        break;
+                    case "carousel":
+                        setCarousel(entity.getValue());
                         break;
                     case "jsPath":
                         jsPath = entity.getValue();
@@ -112,8 +118,34 @@ public class SystemCache {
         });
     }
 
+    /**
+     * 获取备案号
+     *
+     * @return 备案号
+     */
     public static String getBeian() {
         return beian;
+    }
+
+    /**
+     * 获取首页轮播JSON
+     *
+     * @return json string
+     */
+    public static String getCarousel() {
+        return carousel;
+    }
+
+    /**
+     * 更新首页轮播JSON
+     *
+     * @param carousel 首页轮播JSON
+     */
+    public static void setCarousel(String carousel) {
+        if (carousel.length() < 2) {
+            carousel = "[]";
+        }
+        SystemCache.carousel = carousel;
     }
 
     public static String getJsPath() {

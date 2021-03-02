@@ -21,7 +21,7 @@
         <div class="goodsItemBg" th:each="goods,iter: ${item.goodsList}" th:if="${iter.index < 5}">
             <div class="goodsItem">
                 <a class="img" th:href="@{/goods/{id}.html(id=${goods.id})}">
-                    <img th:src="${#helpers.imgZoom(goods.img, 220, 220)}">
+                    <img class="img-220" th:src="${#helpers.imgZoom(goods.img, 220, 220)}">
                 </a>
                 <div class="price" th:text="${#helpers.priceFormat(goods.price)}"></div>
                 <div>

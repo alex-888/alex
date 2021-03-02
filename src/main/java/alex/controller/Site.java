@@ -3,6 +3,7 @@ package alex.controller;
 import alex.cache.CategoryCache;
 import alex.cache.GoodsCache;
 import alex.cache.RegionCache;
+import alex.cache.SystemCache;
 import alex.config.AppConfig;
 import alex.lib.Captcha;
 import alex.lib.Helper;
@@ -56,13 +57,25 @@ public class Site {
     }
 
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    /**
+     * 首页
+     * @param request request
+     * @return view
+     */
+    @GetMapping(value = "")
     public ModelAndView getIndex(HttpServletRequest request) {
         ModelAndView modelAndView = Helper.newModelAndView("index", request);
+        modelAndView.addObject("carouselJson", SystemCache.getCarousel());
         modelAndView.addObject("recommend", GoodsCache.getRecommend());
         return modelAndView;
     }
 
+
+    /**
+     * 商品列表
+     * @param request request
+     * @return view
+     */
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ModelAndView getList(HttpServletRequest request) {
         StringBuilder sql = new StringBuilder("select id,imgs,name,price from goods where status & 0b10 > 0");

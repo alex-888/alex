@@ -26,11 +26,11 @@ public class AdminAuthority {
         rules.put("商品-管理商品规格", new String[]{"post@/admin/goods/spec/delete",
                 "get@/admin/goods/spec/edit", "post@/admin/goods/spec/edit"});
         rules.put("订单-订单列表", new String[]{"get@/admin/order/order/list"});
+        rules.put("订单-编辑订单", new String[]{"get@/admin/order/order/edit"});
         rules.put("会员-会员列表", new String[]{"get@/admin/user/user/list"});
         rules.put("会员-编辑会员", new String[]{"get@/admin/user/user/edit", "post@/admin/user/user/edit"});
         rules.put("会员-删除会员", new String[]{"post@/admin/user/user/delete"});
         rules.put("系统-系统管理", new String[]{"get@/admin/sys/manage", "post@/admin/sys/manage"});
-
         rules.put("系统-管理员列表", new String[]{"get@/admin/sys/adminUser/list"});
         rules.put("系统-管理管理员", new String[]{
                 "get@/admin/sys/adminUser/edit", "post@/admin/sys/adminUser/edit", "post@/admin/sys/adminUser/delete"});
@@ -44,6 +44,7 @@ public class AdminAuthority {
                 "get@/admin/sys/shipping/freeRule", "get@/admin/sys/shipping/company", "post@/admin/sys/shipping/company",
                 "post@/admin/sys/shipping/delete", "post@/admin/sys/shipping/priceRule", "post@/admin/sys/shipping/freeRule"});
         rules.put("系统-系统信息", new String[]{"get@/admin/sys/info"});
+        rules.put("其它-首页轮播", new String[]{"get@/admin/other/home/carousel", "post@/admin/other/home/carousel"});
         rules.put("其它-静态文件", new String[]{"get@/admin/other/static", "post@/admin/other/static"});
         rules.put("其它-文章分类", new String[]{"get@/admin/other/article/category", "post@/admin/sys/manage"});
         rules.put("其它-文章管理", new String[]{"get@/admin/other/article/list", "post@/admin/sys/manage"});

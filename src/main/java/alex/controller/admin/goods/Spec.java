@@ -109,10 +109,9 @@ public class Spec {
                 continue;
             }
 
-            ;
             String hint = hints[i] == null ? "" : hints[i].trim();
             String img = imgs[i] == null ? "" : imgs[i].trim();
-            if (img.length() > 0) {
+            if (img.length() > 0 && !img.contains("?")) {
                 img = HelperUtils.imgZoom(img, 40, 40);
             }
             Map<String, String> row = new LinkedHashMap<>();
@@ -171,9 +170,7 @@ public class Spec {
                 List<Map<String, String>> rows = mapper.readValue(str, new TypeReference<>() {
                 });
                 StringBuilder sb = new StringBuilder();
-                rows.forEach(spec -> {
-                    sb.append(spec.get("val")).append(", ");
-                });
+                rows.forEach(spec -> sb.append(spec.get("val")).append(", "));
                 String value = sb.toString();
                 if (value.length() > 2) {
                     value = value.substring(0, value.length() - 2);
